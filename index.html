@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>运动日志</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="运动日志首页">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <span>
+            <strong>运动日志</strong>
+            <small>Daily Training Log</small>
+          </span>
+        </a>
+
+        <div class="top-actions">
+          <button class="ghost-button" id="exportBtn" type="button">导出记录</button>
+          <label class="ghost-button import-button" for="importInput">导入记录</label>
+          <input id="importInput" type="file" accept="application/json" hidden>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="hero-panel" aria-labelledby="entryTitle">
+          <div class="hero-copy">
+            <p class="eyebrow">Today</p>
+            <h1 id="entryTitle">记录今天的训练</h1>
+            <p class="hero-line" id="heroLine">持续一点，身体会记住。</p>
+          </div>
+
+          <form id="workoutForm" class="entry-form">
+            <input type="hidden" id="recordId">
+
+            <div class="form-grid">
+              <label class="field">
+                <span>日期</span>
+                <input id="dateInput" type="date" required>
+              </label>
+
+              <label class="field">
+                <span>时长（分钟）</span>
+                <input id="durationInput" type="number" min="1" max="1440" step="1" placeholder="45" required>
+              </label>
+
+              <label class="field">
+                <span>强度</span>
+                <select id="intensityInput">
+                  <option value="轻松">轻松</option>
+                  <option value="中等" selected>中等</option>
+                  <option value="高强度">高强度</option>
+                  <option value="恢复">恢复</option>
+                </select>
+              </label>
+
+              <fieldset class="field field-wide exercise-field">
+                <legend>运动项目</legend>
+                <div class="exercise-grid" id="exerciseGrid">
+                  <label><input type="checkbox" value="跑步">跑步</label>
+                  <label><input type="checkbox" value="力量">力量</label>
+                  <label><input type="checkbox" value="骑行">骑行</label>
+                  <label><input type="checkbox" value="游泳">游泳</label>
+                  <label><input type="checkbox" value="瑜伽">瑜伽</label>
+                  <label><input type="checkbox" value="徒步">徒步</label>
+                  <label><input type="checkbox" value="球类">球类</label>
+                  <label><input type="checkbox" value="拉伸">拉伸</label>
+                </div>
+              </fieldset>
+
+              <label class="field field-wide">
+                <span>补充项目</span>
+                <input id="customExerciseInput" type="text" placeholder="例如：HIIT、普拉提、拳击">
+              </label>
+
+              <label class="field field-wide">
+                <span>训练备注</span>
+                <textarea id="notesInput" rows="4" placeholder="今天完成了什么、身体感觉如何"></textarea>
+              </label>
+
+              <label class="field field-wide">
+                <span>图片</span>
+                <div class="photo-drop" id="photoDrop">
+                  <input id="photoInput" type="file" accept="image/*">
+                  <div class="photo-preview" id="photoPreview">
+                    <span>选择或拖入图片</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button class="primary-button" id="submitBtn" type="submit">保存记录</button>
+              <button class="ghost-button" id="resetBtn" type="button">清空</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="dashboard" aria-labelledby="dashboardTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Dashboard</p>
+              <h2 id="dashboardTitle">运动可视化</h2>
+            </div>
+
+            <label class="month-filter">
+              <span>月份</span>
+              <input id="monthInput" type="month">
+            </label>
+          </div>
+
+          <div class="metric-grid" id="metricGrid"></div>
+
+          <div class="visual-grid">
+            <article class="visual-panel">
+              <div class="panel-heading">
+                <h3>近 14 天</h3>
+                <span id="chartTotal">0 分钟</span>
+              </div>
+              <div class="bar-chart" id="barChart" aria-label="近 14 天运动时长图"></div>
+            </article>
+
+            <article class="visual-panel">
+              <div class="panel-heading">
+                <h3>本月热力</h3>
+                <span id="monthActive">0 天</span>
+              </div>
+              <div class="heatmap" id="heatmap" aria-label="本月运动热力图"></div>
+            </article>
+
+            <article class="visual-panel">
+              <div class="panel-heading">
+                <h3>项目分布</h3>
+                <span id="typeTotal">0 项</span>
+              </div>
+              <div class="distribution">
+                <div class="donut" id="donutChart" aria-label="项目分布图"></div>
+                <div class="legend" id="legend"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="timeline-section" aria-labelledby="timelineTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">History</p>
+              <h2 id="timelineTitle">训练记录</h2>
+            </div>
+            <label class="search-box">
+              <span>搜索</span>
+              <input id="searchInput" type="search" placeholder="项目、备注、日期">
+            </label>
+          </div>
+
+          <div class="record-list" id="recordList"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="recordTemplate">
+      <article class="record-card">
+        <div class="record-media"></div>
+        <div class="record-body">
+          <div class="record-topline">
+            <div>
+              <time></time>
+              <h3></h3>
+            </div>
+            <span class="duration-pill"></span>
+          </div>
+          <div class="tag-row"></div>
+          <p class="record-notes"></p>
+          <div class="record-actions">
+            <button class="small-button edit-record" type="button">编辑</button>
+            <button class="small-button delete-record" type="button">删除</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
