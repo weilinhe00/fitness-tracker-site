@@ -199,7 +199,7 @@
                 <div class="cal-head">
                     <div>
                         <h2>数据备份与同步</h2>
-                        <p class="subtitle">这里管理打卡数据的备份和云端同步。<strong>导出备份</strong>把当前记录存成 JSON 文件；<strong>导入备份</strong>用文件恢复到当前浏览器。<strong>管理员登录</strong>后，新增的打卡会同步到云端，所有访问网页的人都能实时看到。</p>
+                        <p class="subtitle">这里管理打卡数据的备份和云端同步。<strong>导出备份</strong>把当前记录存成 JSON 文件；<strong>导入备份</strong>用文件恢复到当前浏览器。<strong>小何登录</strong>后，新增的打卡会同步到云端，所有访问网页的人都能实时看到。</p>
                     </div>
                 </div>
                 <div class="data-actions">
@@ -213,10 +213,9 @@
                     </button>
                     <button type="button" class="data-btn" id="authBtn" title="Google 登录后即可写入云端">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <span>管理员登录</span>
+                        <span>小何登录</span>
                     </button>
                 </div>
-                <p class="sync-state-line"><span id="syncState"></span></p>
                 <input type="file" id="importFile" accept="application/json,.json" hidden>
             </section>
 
@@ -415,25 +414,9 @@
         // ---------- Auth UI ----------
         var authBtn = document.getElementById('authBtn');
         var authBtnLabel = authBtn.querySelector('span');
-        var syncStateEl = document.getElementById('syncState');
 
         function updateAuthUI() {
-            if (currentUser) {
-                authBtnLabel.textContent = '登出';
-                if (isOwner()) {
-                    syncStateEl.textContent = '已登录 · ' + (currentUser.displayName || currentUser.email || '管理员') + ' · 写入会同步到云端';
-                    syncStateEl.classList.add('is-owner');
-                    syncStateEl.classList.remove('is-readonly');
-                } else {
-                    syncStateEl.textContent = '当前账号不是管理员 — 写入仅保存到本地';
-                    syncStateEl.classList.remove('is-owner');
-                    syncStateEl.classList.add('is-readonly');
-                }
-            } else {
-                authBtnLabel.textContent = '管理员登录';
-                syncStateEl.textContent = '';
-                syncStateEl.classList.remove('is-owner', 'is-readonly');
-            }
+            authBtnLabel.textContent = currentUser ? '登出' : '小何登录';
         }
 
         authBtn.addEventListener('click', function() {

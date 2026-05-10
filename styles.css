@@ -223,25 +223,6 @@ nav.main-nav {
 .year-filter button:hover { color: var(--text); }
 .year-filter button.active { color: var(--text); font-weight: 500; }
 
-/* Sync state line (under data-actions in backup section) */
-.sync-state-line {
-    margin-top: 0.85rem;
-    margin-bottom: 0;
-    min-height: 1.2em;
-}
-.sync-state {
-    font-size: 0.78rem;
-    color: var(--text-tertiary);
-    line-height: 1.5;
-    word-break: break-word;
-}
-.sync-state.is-owner { color: var(--text); font-weight: 500; }
-.sync-state.is-owner::before {
-    content: "● ";
-    color: var(--text);
-}
-.sync-state.is-readonly { color: var(--text-tertiary); }
-
 /* Backup section (bottom of page) */
 .backup-section {
     margin-top: 5rem;
