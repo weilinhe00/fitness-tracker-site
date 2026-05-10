@@ -1,6 +1,16 @@
-# 运动日志网站
+# 小何的个人训练记录
 
-这是一个可以直接上传到 Git/GitHub Pages 的静态网页。打开 `index.html` 后，可以记录每天的运动日期、时长、强度、运动项目、备注和图片，并自动生成统计卡片、近 14 天柱状图、本月热力图和运动项目分布图。
+这是一个可以直接上传到 GitHub Pages 的静态网页。打开 `index.html` 后，可以记录每天的运动日期、时长、强度、训练项目、备注和图片，并自动生成统计卡片、近 14 天柱状图、本月热力图、项目分布图和计划完成度。
+
+页面已内置小何的训练计划：
+
+- 波比跳：极限 40 个，目标 30 个 x 3 组
+- 箭步蹲：极限 50 个，目标 30 个 x 3 组
+- 4 公斤哑铃提拉：极限 60 个，目标 40 个 x 3 组
+- 卷腹：极限 40 个，目标 30 个 x 3 组
+- 龙门架：极限 30 个，目标 30 个 x 1 组
+- 跑步、骑单车：可选有氧
+- 补充项目：可以记录未来新增的训练
 
 ## 本地打开
 
@@ -11,20 +21,6 @@
 ```bash
 open ~/Desktop/fitness-tracker-site/index.html
 ```
-
-## 上传到 GitHub
-
-```bash
-cd ~/Desktop/fitness-tracker-site
-git init
-git add .
-git commit -m "Add fitness tracker site"
-git branch -M main
-git remote add origin 你的仓库地址
-git push -u origin main
-```
-
-如果用 GitHub Pages，进入仓库的 `Settings > Pages`，选择 `Deploy from a branch`，分支选 `main`，目录选 `/root`。
 
 ## 数据说明
 

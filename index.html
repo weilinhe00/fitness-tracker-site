@@ -3,21 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>运动日志</title>
+    <title>小何的个人训练记录</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="运动日志首页">
+        <a class="brand" href="#top" aria-label="小何的个人训练记录首页">
           <span class="brand-mark" aria-hidden="true">
             <span></span>
             <span></span>
             <span></span>
           </span>
           <span>
-            <strong>运动日志</strong>
-            <small>Daily Training Log</small>
+            <strong>小何的个人训练记录</strong>
+            <small>Personal Training Log</small>
           </span>
         </a>
 
@@ -31,9 +31,11 @@
       <main id="top">
         <section class="hero-panel" aria-labelledby="entryTitle">
           <div class="hero-copy">
-            <p class="eyebrow">Today</p>
-            <h1 id="entryTitle">记录今天的训练</h1>
-            <p class="hero-line" id="heroLine">持续一点，身体会记住。</p>
+            <p class="eyebrow">Xiao He</p>
+            <h1 id="entryTitle">小何的个人训练记录</h1>
+            <blockquote class="training-quote">“所有摧毁身体的快乐都无法超过塑造身体带来的快乐。”</blockquote>
+            <p class="hero-line" id="heroLine">5 个固定动作，跑步和骑单车按当天状态加入。</p>
+            <div class="hero-stats" id="heroStats"></div>
           </div>
 
           <form id="workoutForm" class="entry-form">
@@ -61,22 +63,13 @@
               </label>
 
               <fieldset class="field field-wide exercise-field">
-                <legend>运动项目</legend>
-                <div class="exercise-grid" id="exerciseGrid">
-                  <label><input type="checkbox" value="跑步">跑步</label>
-                  <label><input type="checkbox" value="力量">力量</label>
-                  <label><input type="checkbox" value="骑行">骑行</label>
-                  <label><input type="checkbox" value="游泳">游泳</label>
-                  <label><input type="checkbox" value="瑜伽">瑜伽</label>
-                  <label><input type="checkbox" value="徒步">徒步</label>
-                  <label><input type="checkbox" value="球类">球类</label>
-                  <label><input type="checkbox" value="拉伸">拉伸</label>
-                </div>
+                <legend>今日训练</legend>
+                <div class="plan-board" id="planBoard"></div>
               </fieldset>
 
               <label class="field field-wide">
                 <span>补充项目</span>
-                <input id="customExerciseInput" type="text" placeholder="例如：HIIT、普拉提、拳击">
+                <input id="customExerciseInput" type="text" placeholder="例如：划船机、椭圆机、拉伸">
               </label>
 
               <label class="field field-wide">
@@ -106,7 +99,7 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Dashboard</p>
-              <h2 id="dashboardTitle">运动可视化</h2>
+              <h2 id="dashboardTitle">训练可视化</h2>
             </div>
 
             <label class="month-filter">
@@ -144,6 +137,14 @@
                 <div class="legend" id="legend"></div>
               </div>
             </article>
+
+            <article class="visual-panel progress-panel">
+              <div class="panel-heading">
+                <h3>计划完成度</h3>
+                <span id="targetSummary">0%</span>
+              </div>
+              <div class="target-progress-list" id="targetProgress"></div>
+            </article>
           </div>
         </section>
 
@@ -176,6 +177,7 @@
             <span class="duration-pill"></span>
           </div>
           <div class="tag-row"></div>
+          <div class="record-details"></div>
           <p class="record-notes"></p>
           <div class="record-actions">
             <button class="small-button edit-record" type="button">编辑</button>

@@ -1,15 +1,74 @@
 const STORAGE_KEY = "fitness-tracker-records-v1";
 
+const PLAN_ITEMS = [
+  {
+    id: "burpee",
+    name: "波比跳",
+    kind: "strength",
+    max: 40,
+    targetReps: 30,
+    targetSets: 3,
+    color: "#007aff",
+  },
+  {
+    id: "lunge",
+    name: "箭步蹲",
+    kind: "strength",
+    max: 50,
+    targetReps: 30,
+    targetSets: 3,
+    color: "#ff9500",
+  },
+  {
+    id: "dumbbell-upright-row",
+    name: "4公斤哑铃提拉",
+    kind: "strength",
+    max: 60,
+    targetReps: 40,
+    targetSets: 3,
+    color: "#34c759",
+  },
+  {
+    id: "crunch",
+    name: "卷腹",
+    kind: "strength",
+    max: 40,
+    targetReps: 30,
+    targetSets: 3,
+    color: "#af52de",
+  },
+  {
+    id: "cable-machine",
+    name: "龙门架",
+    kind: "strength",
+    max: 30,
+    targetReps: 30,
+    targetSets: 1,
+    color: "#ff3b30",
+  },
+  {
+    id: "run",
+    name: "跑步",
+    kind: "cardio",
+    color: "#5856d6",
+  },
+  {
+    id: "bike",
+    name: "骑单车",
+    kind: "cardio",
+    color: "#00c7be",
+  },
+];
+
 const state = {
   records: [],
   pendingPhoto: "",
   editingPhoto: "",
 };
 
-const colors = ["#2f7d58", "#df6545", "#2f67d8", "#e7b93c", "#78c6a3", "#7d5fff", "#0f9f9a", "#b6538b"];
-
 const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+const planById = new Map(PLAN_ITEMS.map((item) => [item.id, item]));
+const planByName = new Map(PLAN_ITEMS.map((item) => [item.name, item]));
 
 const elements = {
   form: $("#workoutForm"),
@@ -22,7 +81,7 @@ const elements = {
   photo: $("#photoInput"),
   photoDrop: $("#photoDrop"),
   photoPreview: $("#photoPreview"),
-  exerciseGrid: $("#exerciseGrid"),
+  planBoard: $("#planBoard"),
   exportBtn: $("#exportBtn"),
   importInput: $("#importInput"),
   month: $("#monthInput"),
@@ -35,10 +94,13 @@ const elements = {
   donut: $("#donutChart"),
   legend: $("#legend"),
   typeTotal: $("#typeTotal"),
+  targetSummary: $("#targetSummary"),
+  targetProgress: $("#targetProgress"),
   recordList: $("#recordList"),
   resetBtn: $("#resetBtn"),
   submitBtn: $("#submitBtn"),
   heroLine: $("#heroLine"),
+  heroStats: $("#heroStats"),
 };
 
 function todayString() {
@@ -91,17 +153,182 @@ function sortRecords(records) {
   });
 }
 
-function getCheckedExercises() {
-  const checked = $$("#exerciseGrid input:checked").map((input) => input.value);
-  const custom = elements.customExercise.value
+function targetLabel(item) {
+  if (item.kind === "cardio") return "可选有氧";
+  return `${item.targetReps} 个 x ${item.targetSets} 组`;
+}
+
+function targetTotal(item) {
+  return Number(item.targetReps || 0) * Number(item.targetSets || 0);
+}
+
+function itemTotalReps(item) {
+  if (item.kind !== "strength") return 0;
+  return Number(item.sets || 0) * Number(item.reps || 0);
+}
+
+function itemTargetTotal(item) {
+  const plan = planById.get(item.id) || planByName.get(item.name);
+  if (!plan || plan.kind !== "strength") return 0;
+  return targetTotal(plan);
+}
+
+function normalizeItems(record) {
+  if (Array.isArray(record.items) && record.items.length) {
+    return record.items.map((item) => {
+      const plan = planById.get(item.id) || planByName.get(item.name) || {};
+      return {
+        ...plan,
+        ...item,
+        kind: item.kind || plan.kind || "strength",
+        color: item.color || plan.color || "#8e8e93",
+      };
+    });
+  }
+
+  return (record.exercises || []).map((name) => {
+    const plan = planByName.get(name) || { id: `custom-${name}`, name, kind: "custom", color: "#8e8e93" };
+    return {
+      ...plan,
+      sets: plan.targetSets || 1,
+      reps: plan.targetReps || 0,
+      totalReps: targetTotal(plan),
+      minutes: record.duration || 0,
+      distance: "",
+    };
+  });
+}
+
+function selectedItems(records = state.records) {
+  return records.flatMap((record) => normalizeItems(record));
+}
+
+function strengthItems(records = state.records) {
+  return selectedItems(records).filter((item) => item.kind === "strength");
+}
+
+function renderPlanBoard() {
+  elements.planBoard.innerHTML = PLAN_ITEMS.map((item) => {
+    const isStrength = item.kind === "strength";
+    const progress = isStrength ? Math.min(100, Math.round((item.targetReps / item.max) * 100)) : 0;
+    const defaultChecked = isStrength ? "checked" : "";
+
+    return `
+      <article class="plan-card" data-plan-card="${item.id}" style="--item-color:${item.color}">
+        <label class="plan-toggle">
+          <input type="checkbox" data-plan-check="${item.id}" ${defaultChecked}>
+          <span>${item.name}</span>
+        </label>
+        <div class="plan-meta">
+          <span>${targetLabel(item)}</span>
+          ${isStrength ? `<strong>极限 ${item.max} 个</strong>` : `<strong>可选</strong>`}
+        </div>
+        ${
+          isStrength
+            ? `
+              <div class="limit-line" aria-hidden="true">
+                <span style="width:${progress}%"></span>
+              </div>
+              <div class="plan-inputs">
+                <label>
+                  <span>完成组数</span>
+                  <input type="number" min="0" max="20" step="1" data-plan-field="${item.id}:sets" value="${item.targetSets}">
+                </label>
+                <label>
+                  <span>每组次数</span>
+                  <input type="number" min="0" max="300" step="1" data-plan-field="${item.id}:reps" value="${item.targetReps}">
+                </label>
+              </div>
+            `
+            : `
+              <div class="plan-inputs">
+                <label>
+                  <span>分钟</span>
+                  <input type="number" min="0" max="600" step="1" data-plan-field="${item.id}:minutes" placeholder="30">
+                </label>
+                <label>
+                  <span>公里</span>
+                  <input type="number" min="0" max="300" step="0.1" data-plan-field="${item.id}:distance" placeholder="5.0">
+                </label>
+              </div>
+            `
+        }
+      </article>
+    `;
+  }).join("");
+}
+
+function getPlanField(id, field) {
+  const input = $(`[data-plan-field="${CSS.escape(`${id}:${field}`)}"]`);
+  return input ? input.value : "";
+}
+
+function setPlanField(id, field, value) {
+  const input = $(`[data-plan-field="${CSS.escape(`${id}:${field}`)}"]`);
+  if (input) input.value = value ?? "";
+}
+
+function collectWorkoutItems() {
+  const plannedItems = PLAN_ITEMS.filter((item) => $(`[data-plan-check="${item.id}"]`)?.checked).map((item) => {
+    if (item.kind === "strength") {
+      const sets = Number(getPlanField(item.id, "sets") || 0);
+      const reps = Number(getPlanField(item.id, "reps") || 0);
+      return {
+        id: item.id,
+        name: item.name,
+        kind: item.kind,
+        max: item.max,
+        targetReps: item.targetReps,
+        targetSets: item.targetSets,
+        color: item.color,
+        sets,
+        reps,
+        totalReps: sets * reps,
+      };
+    }
+
+    return {
+      id: item.id,
+      name: item.name,
+      kind: item.kind,
+      color: item.color,
+      minutes: Number(getPlanField(item.id, "minutes") || 0),
+      distance: Number(getPlanField(item.id, "distance") || 0),
+    };
+  });
+
+  const customItems = elements.customExercise.value
     .split(/[、,，]/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-  return [...new Set([...checked, ...custom])];
+    .map((name) => name.trim())
+    .filter(Boolean)
+    .map((name) => ({
+      id: `custom-${name}`,
+      name,
+      kind: "custom",
+      color: "#8e8e93",
+    }));
+
+  return [...plannedItems, ...customItems];
+}
+
+function resetPlanBoard() {
+  PLAN_ITEMS.forEach((item) => {
+    const checkbox = $(`[data-plan-check="${item.id}"]`);
+    if (checkbox) checkbox.checked = item.kind === "strength";
+    if (item.kind === "strength") {
+      setPlanField(item.id, "sets", item.targetSets);
+      setPlanField(item.id, "reps", item.targetReps);
+    } else {
+      setPlanField(item.id, "minutes", "");
+      setPlanField(item.id, "distance", "");
+    }
+  });
+  elements.customExercise.value = "";
 }
 
 function resetForm() {
   elements.form.reset();
+  resetPlanBoard();
   elements.recordId.value = "";
   elements.date.value = todayString();
   elements.intensity.value = "中等";
@@ -154,8 +381,15 @@ function getFilteredRecords() {
   const query = elements.search.value.trim().toLowerCase();
 
   return state.records.filter((record) => {
+    const items = normalizeItems(record);
     const inMonth = !selectedMonth || record.date.startsWith(selectedMonth);
-    const text = [record.date, record.duration, record.intensity, ...(record.exercises || []), record.notes || ""]
+    const text = [
+      record.date,
+      record.duration,
+      record.intensity,
+      ...items.map((item) => `${item.name} ${item.sets || ""} ${item.reps || ""}`),
+      record.notes || "",
+    ]
       .join(" ")
       .toLowerCase();
     return inMonth && (!query || text.includes(query));
@@ -164,6 +398,20 @@ function getFilteredRecords() {
 
 function totalMinutes(records) {
   return records.reduce((sum, record) => sum + Number(record.duration || 0), 0);
+}
+
+function totalStrengthReps(records) {
+  return strengthItems(records).reduce((sum, item) => sum + itemTotalReps(item), 0);
+}
+
+function totalTargetReps(records) {
+  return strengthItems(records).reduce((sum, item) => sum + itemTargetTotal(item), 0);
+}
+
+function completionPercent(records) {
+  const target = totalTargetReps(records);
+  if (!target) return 0;
+  return Math.round((totalStrengthReps(records) / target) * 100);
 }
 
 function activeDays(records) {
@@ -191,10 +439,8 @@ function longestStreak(records) {
 
 function favoriteExercise(records) {
   const counts = new Map();
-  records.forEach((record) => {
-    (record.exercises || []).forEach((exercise) => {
-      counts.set(exercise, (counts.get(exercise) || 0) + 1);
-    });
+  selectedItems(records).forEach((item) => {
+    counts.set(item.name, (counts.get(item.name) || 0) + 1);
   });
 
   return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || "暂无";
@@ -203,12 +449,13 @@ function favoriteExercise(records) {
 function renderMetrics(records) {
   const minutes = totalMinutes(records);
   const sessions = records.length;
-  const average = sessions ? Math.round(minutes / sessions) : 0;
+  const reps = totalStrengthReps(records);
+  const percent = completionPercent(records);
   const metrics = [
     ["训练次数", sessions, "筛选范围内"],
     ["总分钟", minutes, `${Math.floor(minutes / 60)} 小时 ${minutes % 60} 分钟`],
-    ["活跃天数", activeDays(records), `最长连续 ${longestStreak(state.records)} 天`],
-    ["平均时长", average, `常练：${favoriteExercise(records)}`],
+    ["力量总量", reps, "按组数 x 次数统计"],
+    ["计划完成", `${percent}%`, `常练：${favoriteExercise(records)}`],
   ];
 
   elements.metricGrid.innerHTML = metrics
@@ -292,44 +539,107 @@ function renderHeatmap(records) {
   elements.monthActive.textContent = `${[...dayTotals.values()].filter(Boolean).length} 天`;
 }
 
-function renderDistribution(records) {
+function exerciseCounts(records) {
   const counts = new Map();
-  records.forEach((record) => {
-    (record.exercises || []).forEach((exercise) => {
-      counts.set(exercise, (counts.get(exercise) || 0) + 1);
-    });
+  selectedItems(records).forEach((item) => {
+    counts.set(item.name, (counts.get(item.name) || 0) + 1);
   });
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+}
 
-  const entries = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+function colorForName(name) {
+  return planByName.get(name)?.color || "#8e8e93";
+}
+
+function renderDistribution(records) {
+  const entries = exerciseCounts(records);
   const total = entries.reduce((sum, [, count]) => sum + count, 0);
   elements.typeTotal.textContent = `${total} 项`;
 
   if (!total) {
-    elements.donut.style.background = "conic-gradient(#edf3ee 0 100%)";
+    elements.donut.style.background = "conic-gradient(#e5e5ea 0 100%)";
     elements.legend.innerHTML = `<div class="empty-state">还没有项目数据</div>`;
     return;
   }
 
   let cursor = 0;
-  const slices = entries.map(([name, count], index) => {
+  const slices = entries.map(([name, count]) => {
     const start = cursor;
     const end = cursor + (count / total) * 100;
     cursor = end;
-    return `${colors[index % colors.length]} ${start}% ${end}%`;
+    return `${colorForName(name)} ${start}% ${end}%`;
   });
 
   elements.donut.style.background = `conic-gradient(${slices.join(", ")})`;
   elements.legend.innerHTML = entries
-    .map(([name, count], index) => `
+    .map(([name, count]) => `
       <div class="legend-item">
         <span class="legend-name">
-          <span class="legend-dot" style="background:${colors[index % colors.length]}"></span>
+          <span class="legend-dot" style="background:${colorForName(name)}"></span>
           ${name}
         </span>
         <strong>${count}</strong>
       </div>
     `)
     .join("");
+}
+
+function renderTargetProgress(records) {
+  const grouped = new Map();
+
+  PLAN_ITEMS.filter((item) => item.kind === "strength").forEach((item) => {
+    grouped.set(item.id, {
+      ...item,
+      completed: 0,
+      target: 0,
+    });
+  });
+
+  strengthItems(records).forEach((item) => {
+    const plan = planById.get(item.id) || planByName.get(item.name);
+    if (!plan) return;
+    const existing = grouped.get(plan.id);
+    existing.completed += itemTotalReps(item);
+    existing.target += targetTotal(plan);
+  });
+
+  const completed = [...grouped.values()].reduce((sum, item) => sum + item.completed, 0);
+  const target = [...grouped.values()].reduce((sum, item) => sum + item.target, 0);
+  elements.targetSummary.textContent = target ? `${Math.round((completed / target) * 100)}%` : "0%";
+
+  elements.targetProgress.innerHTML = [...grouped.values()]
+    .map((item) => {
+      const percent = item.target ? Math.min(140, Math.round((item.completed / item.target) * 100)) : 0;
+      return `
+        <div class="target-row" style="--item-color:${item.color}">
+          <div>
+            <strong>${item.name}</strong>
+            <span>${item.completed} / ${item.target || targetTotal(item)} 个</span>
+          </div>
+          <div class="target-track">
+            <span style="width:${Math.min(100, percent)}%"></span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function itemDetailText(item) {
+  if (item.kind === "cardio") {
+    const minutes = Number(item.minutes || 0);
+    const distance = Number(item.distance || 0);
+    if (minutes && distance) return `${item.name} ${minutes} 分钟 / ${distance} km`;
+    if (minutes) return `${item.name} ${minutes} 分钟`;
+    if (distance) return `${item.name} ${distance} km`;
+    return item.name;
+  }
+
+  if (item.kind === "custom") {
+    return item.name;
+  }
+
+  return `${item.name} ${item.reps || 0} 个 x ${item.sets || 0} 组`;
 }
 
 function renderRecords(records) {
@@ -342,6 +652,7 @@ function renderRecords(records) {
   elements.recordList.innerHTML = "";
 
   records.forEach((record) => {
+    const items = normalizeItems(record);
     const node = template.content.cloneNode(true);
     const card = node.querySelector(".record-card");
     const media = node.querySelector(".record-media");
@@ -349,18 +660,20 @@ function renderRecords(records) {
     const title = node.querySelector("h3");
     const duration = node.querySelector(".duration-pill");
     const tags = node.querySelector(".tag-row");
+    const details = node.querySelector(".record-details");
     const notes = node.querySelector(".record-notes");
 
     card.dataset.id = record.id;
     time.dateTime = record.date;
     time.textContent = formatDate(record.date);
-    title.textContent = (record.exercises || []).join(" + ") || "运动";
+    title.textContent = items.map((item) => item.name).join(" + ") || "运动";
     duration.textContent = `${record.duration} 分钟`;
     notes.textContent = record.notes || "没有备注";
-    tags.innerHTML = [record.intensity, ...(record.exercises || [])]
+    tags.innerHTML = [record.intensity, `${totalStrengthReps([record])} 个力量量`]
       .filter(Boolean)
       .map((tag) => `<span class="tag">${tag}</span>`)
       .join("");
+    details.innerHTML = items.map((item) => `<span>${itemDetailText(item)}</span>`).join("");
 
     if (record.image) {
       media.innerHTML = `<img src="${record.image}" alt="${record.date} 训练图片">`;
@@ -372,13 +685,22 @@ function renderRecords(records) {
 
 function renderHero(records) {
   const minutes = totalMinutes(records);
+  const sessions = records.length;
+  const reps = totalStrengthReps(records);
+
+  elements.heroStats.innerHTML = `
+    <span><strong>${sessions}</strong> 次训练</span>
+    <span><strong>${reps}</strong> 个力量量</span>
+    <span><strong>${activeDays(records)}</strong> 天活跃</span>
+  `;
+
   if (!records.length) {
-    elements.heroLine.textContent = "今天先写下第一条，后面就会有趋势。";
+    elements.heroLine.textContent = "5 个固定动作，跑步和骑单车按当天状态加入。";
     return;
   }
 
   const latest = sortRecords([...state.records])[0];
-  elements.heroLine.textContent = `最近一次：${latest.date}，${latest.duration} 分钟，累计 ${minutes} 分钟。`;
+  elements.heroLine.textContent = `最近一次：${latest.date}，${latest.duration} 分钟；累计 ${minutes} 分钟。`;
 }
 
 function render() {
@@ -387,16 +709,17 @@ function render() {
   renderBarChart();
   renderHeatmap(filtered);
   renderDistribution(filtered);
+  renderTargetProgress(filtered);
   renderRecords(filtered);
   renderHero(state.records);
 }
 
 function handleSubmit(event) {
   event.preventDefault();
-  const exercises = getCheckedExercises();
+  const items = collectWorkoutItems();
 
-  if (!exercises.length) {
-    alert("请至少选择或填写一个运动项目。");
+  if (!items.length) {
+    alert("请至少选择一个训练项目。");
     return;
   }
 
@@ -407,7 +730,8 @@ function handleSubmit(event) {
     date: elements.date.value,
     duration: Number(elements.duration.value),
     intensity: elements.intensity.value,
-    exercises,
+    items,
+    exercises: items.map((item) => item.name),
     notes: elements.notes.value.trim(),
     image: state.pendingPhoto || state.editingPhoto || existing?.image || "",
     createdAt: existing?.createdAt || new Date().toISOString(),
@@ -434,17 +758,30 @@ function editRecord(id) {
   state.editingPhoto = record.image || "";
   renderPhotoPreview(state.editingPhoto);
 
-  const known = new Set($$("#exerciseGrid input").map((input) => input.value));
-  const custom = [];
-  (record.exercises || []).forEach((exercise) => {
-    const input = $(`#exerciseGrid input[value="${CSS.escape(exercise)}"]`);
-    if (input) {
-      input.checked = true;
-    } else if (!known.has(exercise)) {
-      custom.push(exercise);
+  PLAN_ITEMS.forEach((item) => {
+    const checkbox = $(`[data-plan-check="${item.id}"]`);
+    if (checkbox) checkbox.checked = false;
+  });
+
+  normalizeItems(record).forEach((item) => {
+    const plan = planById.get(item.id) || planByName.get(item.name);
+    if (!plan) return;
+    const checkbox = $(`[data-plan-check="${plan.id}"]`);
+    if (checkbox) checkbox.checked = true;
+    if (plan.kind === "strength") {
+      setPlanField(plan.id, "sets", item.sets || plan.targetSets);
+      setPlanField(plan.id, "reps", item.reps || plan.targetReps);
+    } else {
+      setPlanField(plan.id, "minutes", item.minutes || "");
+      setPlanField(plan.id, "distance", item.distance || "");
     }
   });
-  elements.customExercise.value = custom.join("、");
+
+  elements.customExercise.value = normalizeItems(record)
+    .filter((item) => !planById.has(item.id) && !planByName.has(item.name))
+    .map((item) => item.name)
+    .join("、");
+
   elements.form.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -457,8 +794,9 @@ function deleteRecord(id) {
 
 function exportRecords() {
   const payload = {
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
+    plan: PLAN_ITEMS,
     records: state.records,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -529,6 +867,7 @@ function bindEvents() {
 }
 
 function init() {
+  renderPlanBoard();
   state.records = sortRecords(loadRecords());
   elements.date.value = todayString();
   elements.month.value = monthString();
