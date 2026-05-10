@@ -94,6 +94,20 @@ body {
 
 .role .role-accent { color: var(--text); }
 
+/* Sidebar quote — replaces the role tagline */
+.role-quote {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Noto Sans SC", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    color: var(--text);
+    margin: 0 0 1.25rem;
+    padding: 0 0 0 0.75rem;
+    border-left: 2px solid var(--accent);
+    quotes: none;
+}
+
 .contacts { display: flex; align-items: center; justify-content: flex-start; gap: 1.25rem; }
 
 .contacts a, .contacts .loc {

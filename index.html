@@ -15,13 +15,13 @@
         <nav class="main-nav">
             <div class="nav-links" id="navLinks">
                 <a href="#calendar" class="active">日历</a>
-                <a href="#progress">效果对比</a>
-                <a href="#baseline">起始效果</a>
+                <a href="#stats">统计</a>
+                <a href="#compare">对比</a>
             </div>
             <div class="nav-links popup" id="navLinksPopup">
                 <a href="#calendar" class="active">日历</a>
-                <a href="#progress">效果对比</a>
-                <a href="#baseline">起始效果</a>
+                <a href="#stats">统计</a>
+                <a href="#compare">对比</a>
             </div>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
                 <span class="hamburger"><span></span><span></span><span></span></span>
@@ -31,11 +31,14 @@
         <aside class="sidebar">
             <header class="header">
                 <div class="avatar">
-                    <img src="" alt="Weilin He" onerror="this.style.display='none'">
+                    <img src="photos/weilinhe.jpg" alt="Weilin He" onerror="this.style.display='none'">
                 </div>
                 <h1 class="name-en">Fitness Diary</h1>
                 <div class="name-cn">每日健身记录</div>
-                <p class="role">记录每日训练，<span class="role-accent">追踪每周变化</span></p>
+                <blockquote class="role-quote">
+                    所有摧毁身体的快乐<br>
+                    都无法超过塑造身体带来的快乐。
+                </blockquote>
 
                 <div class="contacts">
                     <span class="loc" title="坚持">
@@ -52,8 +55,8 @@
 
             <div class="year-filter" id="yearFilter">
                 <button type="button" data-section="calendar" class="active">日历</button>
-                <button type="button" data-section="progress">效果对比</button>
-                <button type="button" data-section="baseline">起始效果</button>
+                <button type="button" data-section="stats">统计</button>
+                <button type="button" data-section="compare">对比</button>
             </div>
 
             <div class="stats-mini" id="statsMini">
@@ -90,13 +93,6 @@
 
         <main class="content">
 
-            <section class="hero-quote">
-                <blockquote>
-                    所有摧毁身体的快乐<br>
-                    都无法超过塑造身体带来的快乐。
-                </blockquote>
-            </section>
-
             <section id="calendar">
                 <div class="cal-head">
                     <div>
@@ -125,73 +121,101 @@
                 </div>
             </section>
 
-            <section id="progress">
+            <section id="stats">
                 <div class="cal-head">
                     <div>
-                        <h2>每周效果对比</h2>
-                        <p class="subtitle">每周上传一组照片 — 与上一周或起始效果对比观察变化。</p>
+                        <h2>训练统计</h2>
+                        <p class="subtitle">基于日历中的运动记录自动统计 — 切换月份会同步更新。</p>
                     </div>
-                    <button type="button" class="primary-btn" id="addWeek">+ 添加本周</button>
                 </div>
 
-                <div class="weeks-list" id="weeksList"></div>
+                <div class="stats-grid">
+                    <div class="stat-card big">
+                        <span class="stat-card-label">本月训练天数</span>
+                        <strong id="bigStatMonth">0</strong>
+                        <small id="bigStatMonthOf">/ 0 天</small>
+                    </div>
+                    <div class="stat-card big">
+                        <span class="stat-card-label">连续训练</span>
+                        <strong id="bigStatStreak">0</strong>
+                        <small>天</small>
+                    </div>
+                    <div class="stat-card big">
+                        <span class="stat-card-label">累计训练</span>
+                        <strong id="bigStatTotal">0</strong>
+                        <small>天</small>
+                    </div>
+                    <div class="stat-card big">
+                        <span class="stat-card-label">本月运动项次数</span>
+                        <strong id="bigStatItems">0</strong>
+                        <small>次</small>
+                    </div>
+                </div>
+
+                <div class="visual-grid">
+                    <article class="visual-panel">
+                        <div class="panel-heading">
+                            <h3>常做的运动</h3>
+                            <span id="topListMeta">本月</span>
+                        </div>
+                        <div class="top-list" id="topList"></div>
+                    </article>
+
+                    <article class="visual-panel">
+                        <div class="panel-heading">
+                            <h3>近 30 天热力</h3>
+                            <span id="heatMeta">每格代表 1 天</span>
+                        </div>
+                        <div class="heat-strip" id="heatStrip"></div>
+                        <div class="heat-legend">
+                            <span>少</span>
+                            <span class="heat-cell level-1"></span>
+                            <span class="heat-cell level-2"></span>
+                            <span class="heat-cell level-3"></span>
+                            <span>多</span>
+                        </div>
+                    </article>
+                </div>
             </section>
 
-            <section id="baseline">
+            <section id="compare">
                 <div class="cal-head">
                     <div>
-                        <h2>起始效果</h2>
-                        <p class="subtitle">最初的样子 — 点击查看大图。</p>
+                        <h2>起始 vs 最新</h2>
+                        <p class="subtitle">在本地 <code>photos/</code> 下按日期建子文件夹（例如 <code>2026.5.17/</code>）放入 4 张图，<code>git push</code> 后自动出现 — 最早的那次作为起始，最新的那次用于对比。</p>
                     </div>
                 </div>
 
-                <div class="baseline-card" id="baselineCard">
-                    <button type="button" class="baseline-cover" id="baselineCover">
+                <div class="compare-card" id="compareCard">
+                    <button type="button" class="compare-cover" id="compareCover">
                         <div class="baseline-hint">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            <span>点击查看起始效果</span>
-                            <small>看看出发时的样子</small>
+                            <span>点击查看对比</span>
+                            <small>左侧起始，右侧最新</small>
                         </div>
                     </button>
-                    <div class="baseline-reveal" id="baselineReveal" hidden>
-                        <div class="baseline-grid">
-                            <div class="baseline-slot" data-slot="front">
-                                <div class="baseline-img" data-empty="true">
-                                    <span class="slot-plus">＋</span>
+
+                    <div class="compare-reveal" id="compareReveal" hidden>
+                        <div class="compare-cols">
+                            <div class="compare-col">
+                                <div class="compare-col-head">
+                                    <p class="eyebrow">起始</p>
+                                    <h4 id="compareStartDate">—</h4>
                                 </div>
-                                <div class="baseline-meta">
-                                    <span class="baseline-label">正面</span>
-                                    <input type="file" accept="image/*" hidden>
-                                    <button type="button" class="baseline-upload">上传</button>
-                                </div>
+                                <div class="compare-photos" id="compareStartPhotos"></div>
                             </div>
-                            <div class="baseline-slot" data-slot="side">
-                                <div class="baseline-img" data-empty="true">
-                                    <span class="slot-plus">＋</span>
+                            <div class="compare-divider" aria-hidden="true"></div>
+                            <div class="compare-col">
+                                <div class="compare-col-head">
+                                    <p class="eyebrow">最新</p>
+                                    <h4 id="compareEndDate">—</h4>
                                 </div>
-                                <div class="baseline-meta">
-                                    <span class="baseline-label">侧面</span>
-                                    <input type="file" accept="image/*" hidden>
-                                    <button type="button" class="baseline-upload">上传</button>
-                                </div>
-                            </div>
-                            <div class="baseline-slot" data-slot="back">
-                                <div class="baseline-img" data-empty="true">
-                                    <span class="slot-plus">＋</span>
-                                </div>
-                                <div class="baseline-meta">
-                                    <span class="baseline-label">背面</span>
-                                    <input type="file" accept="image/*" hidden>
-                                    <button type="button" class="baseline-upload">上传</button>
-                                </div>
+                                <div class="compare-photos" id="compareEndPhotos"></div>
                             </div>
                         </div>
                         <div class="baseline-foot">
-                            <label class="baseline-date-row">
-                                <span>记录日期</span>
-                                <input type="date" id="baselineDate">
-                            </label>
-                            <button type="button" class="ghost-btn" id="baselineHide">收起</button>
+                            <span class="baseline-date-display" id="compareSpanLabel"></span>
+                            <button type="button" class="ghost-btn" id="compareHide">收起</button>
                         </div>
                     </div>
                 </div>
@@ -216,9 +240,9 @@
             </header>
 
             <div class="modal-body">
-                <label class="field-label">今天做了什么运动？</label>
+                <label class="field-label">今天做了什么运动？<span class="field-hint">可以加多项，每加完一个按"添加"或回车</span></label>
                 <div class="tag-input-row">
-                    <input type="text" id="exerciseInput" placeholder="例如：波比跳 30×3，跑步 5km" autocomplete="off">
+                    <input type="text" id="exerciseInput" placeholder="例如：波比跳 30×3" autocomplete="off">
                     <button type="button" class="primary-btn" id="addExercise">添加</button>
                 </div>
                 <div class="exercise-tags" id="exerciseTags"></div>
@@ -456,6 +480,7 @@
             }
 
             renderStats();
+            if (typeof renderVisualStats === 'function') renderVisualStats();
         }
 
         function escapeHtml(s) {
@@ -606,144 +631,204 @@
             document.getElementById('statTotal').textContent = total + ' 天';
         }
 
-        // ---------- Weekly progress ----------
-        var weeksList = document.getElementById('weeksList');
+        // ---------- Photos (loaded from photos/manifest.json) ----------
+        var manifest = { avatar: null, baseline: null, weekly: [] };
 
-        function renderWeeks() {
-            weeksList.innerHTML = '';
-            if (!store.weeks.length) {
-                weeksList.innerHTML = '<div class="weeks-empty">还没有效果对比 — 点上方“+ 添加本周”开始记录</div>';
-                return;
-            }
-            // sort newest first
-            var sorted = store.weeks.slice().sort(function(a,b) { return (b.date || '').localeCompare(a.date || ''); });
-            sorted.forEach(function(w) {
-                var card = document.createElement('article');
-                card.className = 'week-card';
-                card.innerHTML =
-                    '<div class="week-card-head">' +
-                        '<div>' +
-                            '<p class="eyebrow">第 ' + escapeHtml(w.label || '') + ' 周</p>' +
-                            '<h3>' + escapeHtml(w.date || '未填日期') + '</h3>' +
-                            '<p class="week-note">' + escapeHtml(w.note || '点编辑添加备注') + '</p>' +
-                        '</div>' +
-                        '<div class="week-actions">' +
-                            '<button type="button" class="ghost-btn" data-edit="'+w.id+'">编辑</button>' +
-                            '<button type="button" class="ghost-btn danger" data-del="'+w.id+'">删除</button>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="week-photo-row">' +
-                        photoSlotHtml(w.id, 'front', '正面', w.photos.front) +
-                        photoSlotHtml(w.id, 'side',  '侧面',  w.photos.side) +
-                        photoSlotHtml(w.id, 'back',  '背面',  w.photos.back) +
-                    '</div>';
-                weeksList.appendChild(card);
-            });
+        function fetchManifest() {
+            return fetch('photos/manifest.json?t=' + Date.now(), { cache: 'no-store' })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .catch(function() { return null; });
         }
 
-        function photoSlotHtml(id, slot, label, src) {
-            if (src) {
-                return '<div class="photo-slot filled" data-week="'+id+'" data-slot="'+slot+'">' +
-                    '<img src="'+src+'" alt="'+label+'">' +
-                    '<span class="photo-slot-label">'+label+'</span>' +
-                    '<button type="button" class="photo-slot-replace" data-replace="'+id+'" data-slot-replace="'+slot+'">更换</button>' +
-                '</div>';
-            }
-            return '<button type="button" class="photo-slot empty" data-upload="'+id+'" data-slot-up="'+slot+'">' +
-                '<span class="slot-plus">＋</span>' +
-                '<span class="photo-slot-label">'+label+'</span>' +
-            '</button>';
+        function prettyDate(d) {
+            if (!d) return '';
+            var m = d.match(/^(\d{4})[.\-_](\d{1,2})[.\-_](\d{1,2})$/);
+            if (!m) return d;
+            return m[1] + ' 年 ' + (+m[2]) + ' 月 ' + (+m[3]) + ' 日';
         }
 
-        document.getElementById('addWeek').addEventListener('click', function() {
-            var label = prompt('给这一周编号（例如 19）', String(getISOWeek(new Date())));
-            if (label === null) return;
-            var date = prompt('日期（例如 2026-05-10）', new Date().toISOString().slice(0,10));
-            if (date === null) return;
-            store.weeks.push({
-                id: 'w' + Date.now(),
-                label: label,
-                date: date,
-                note: '',
-                photos: { front: null, side: null, back: null }
-            });
-            saveStore();
-            renderWeeks();
+        // ---------- Compare (起始 vs 最新) ----------
+        var compareCover = document.getElementById('compareCover');
+        var compareReveal = document.getElementById('compareReveal');
+        var compareCard = document.getElementById('compareCard');
+        var compareStartPhotos = document.getElementById('compareStartPhotos');
+        var compareEndPhotos = document.getElementById('compareEndPhotos');
+        var compareStartDate = document.getElementById('compareStartDate');
+        var compareEndDate = document.getElementById('compareEndDate');
+        var compareSpanLabel = document.getElementById('compareSpanLabel');
+
+        compareCover.addEventListener('click', function() {
+            compareCover.style.display = 'none';
+            compareReveal.hidden = false;
+            compareCard.classList.add('revealed');
+        });
+        document.getElementById('compareHide').addEventListener('click', function() {
+            compareCover.style.display = '';
+            compareReveal.hidden = true;
+            compareCard.classList.remove('revealed');
         });
 
-        function getISOWeek(d) {
-            var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-            t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
-            var ys = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
-            return Math.ceil((((t - ys) / 86400000) + 1) / 7);
+        function buildPhotoGrid(container, photos, labelPrefix) {
+            container.innerHTML = '';
+            if (!photos || !photos.length) {
+                container.innerHTML = '<div class="compare-empty">还没有照片</div>';
+                return;
+            }
+            photos.forEach(function(src, i) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'photo-slot filled';
+                btn.setAttribute('data-src', src);
+                btn.innerHTML = '<img src="' + escapeHtml(src) + '" alt="' + labelPrefix + ' ' + (i+1) + '" loading="lazy">';
+                btn.addEventListener('click', function() { openLightbox(src); });
+                container.appendChild(btn);
+            });
         }
 
-        weeksList.addEventListener('click', function(e) {
-            var del = e.target.closest('[data-del]');
-            if (del) {
-                var id = del.getAttribute('data-del');
-                if (confirm('确定删除这一周的记录吗？')) {
-                    store.weeks = store.weeks.filter(function(w){ return w.id !== id; });
-                    saveStore();
-                    renderWeeks();
+        function renderCompare() {
+            var b = manifest.baseline;
+            // newest weekly entry
+            var latest = (manifest.weekly && manifest.weekly.length) ? manifest.weekly[0] : null;
+
+            if (!b && !latest) {
+                compareStartDate.textContent = '—';
+                compareEndDate.textContent = '—';
+                compareSpanLabel.textContent = '';
+                buildPhotoGrid(compareStartPhotos, [], '起始');
+                buildPhotoGrid(compareEndPhotos, [], '最新');
+                compareStartPhotos.innerHTML = '<div class="compare-empty" style="grid-column:1/-1;">在 <code>photos/</code> 下新建一个日期文件夹（例如 <code>2026.5.10</code>）放入 4 张图。</div>';
+                compareEndPhotos.innerHTML = '<div class="compare-empty" style="grid-column:1/-1;">再加一个新日期的文件夹后这里就会显示对比。</div>';
+                return;
+            }
+
+            if (b) {
+                compareStartDate.textContent = prettyDate(b.date);
+                buildPhotoGrid(compareStartPhotos, b.photos, '起始');
+            } else {
+                compareStartDate.textContent = '—';
+                buildPhotoGrid(compareStartPhotos, [], '起始');
+            }
+
+            if (latest) {
+                compareEndDate.textContent = prettyDate(latest.date);
+                buildPhotoGrid(compareEndPhotos, latest.photos, '最新');
+            } else {
+                compareEndDate.textContent = '尚未上传';
+                buildPhotoGrid(compareEndPhotos, [], '最新');
+                compareEndPhotos.innerHTML = '<div class="compare-empty" style="grid-column:1/-1;">还没有第二组对比图<br><small>再加一个新日期的文件夹试试。</small></div>';
+            }
+
+            // Span label
+            if (b && latest) {
+                var span = daysBetween(b.date, latest.date);
+                if (span !== null) compareSpanLabel.textContent = '相隔 ' + span + ' 天';
+            } else if (b) {
+                compareSpanLabel.textContent = '只有起始记录 — 等待新的对比';
+            }
+        }
+
+        function daysBetween(a, b) {
+            var ma = String(a).match(/^(\d{4})[.\-_](\d{1,2})[.\-_](\d{1,2})$/);
+            var mb = String(b).match(/^(\d{4})[.\-_](\d{1,2})[.\-_](\d{1,2})$/);
+            if (!ma || !mb) return null;
+            var da = new Date(+ma[1], +ma[2]-1, +ma[3]);
+            var db = new Date(+mb[1], +mb[2]-1, +mb[3]);
+            return Math.round((db - da) / 86400000);
+        }
+
+        // ---------- Stats visualization ----------
+        var bigStatMonth = document.getElementById('bigStatMonth');
+        var bigStatMonthOf = document.getElementById('bigStatMonthOf');
+        var bigStatStreak = document.getElementById('bigStatStreak');
+        var bigStatTotal = document.getElementById('bigStatTotal');
+        var bigStatItems = document.getElementById('bigStatItems');
+        var topList = document.getElementById('topList');
+        var topListMeta = document.getElementById('topListMeta');
+        var heatStrip = document.getElementById('heatStrip');
+
+        function renderVisualStats() {
+            var monthPrefix = view.y + '-' + String(view.m+1).padStart(2,'0');
+            var daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
+
+            var monthDays = 0, monthItems = 0;
+            var counts = {};
+
+            Object.keys(store.days).forEach(function(k) {
+                var e = store.days[k];
+                if (!e || !e.exercises) return;
+                var isRest = e.exercises.indexOf('休息') >= 0;
+                if (k.indexOf(monthPrefix) === 0) {
+                    if (e.exercises.length && !isRest) {
+                        monthDays++;
+                        e.exercises.forEach(function(t) {
+                            if (t === '休息') return;
+                            monthItems++;
+                            counts[t] = (counts[t] || 0) + 1;
+                        });
+                    }
                 }
-                return;
-            }
-            var edit = e.target.closest('[data-edit]');
-            if (edit) {
-                var id = edit.getAttribute('data-edit');
-                var w = store.weeks.find(function(x){ return x.id === id; });
-                if (!w) return;
-                var label = prompt('标签', w.label || '');
-                if (label === null) return;
-                var date = prompt('日期', w.date || '');
-                if (date === null) return;
-                var note = prompt('备注（这周和上周的对比感受）', w.note || '');
-                if (note === null) return;
-                w.label = label; w.date = date; w.note = note;
-                saveStore();
-                renderWeeks();
-                return;
-            }
-            var up = e.target.closest('[data-upload]');
-            if (up) {
-                pickPhoto(function(dataUrl) {
-                    var w = store.weeks.find(function(x){ return x.id === up.getAttribute('data-upload'); });
-                    if (!w) return;
-                    w.photos[up.getAttribute('data-slot-up')] = dataUrl;
-                    saveStore();
-                    renderWeeks();
-                });
-                return;
-            }
-            var rep = e.target.closest('[data-replace]');
-            if (rep) {
-                e.stopPropagation();
-                pickPhoto(function(dataUrl) {
-                    var w = store.weeks.find(function(x){ return x.id === rep.getAttribute('data-replace'); });
-                    if (!w) return;
-                    w.photos[rep.getAttribute('data-slot-replace')] = dataUrl;
-                    saveStore();
-                    renderWeeks();
-                });
-                return;
-            }
-            var img = e.target.closest('.photo-slot.filled img');
-            if (img) {
-                openLightbox(img.src);
-            }
-        });
-
-        function pickPhoto(cb) {
-            var inp = document.createElement('input');
-            inp.type = 'file'; inp.accept = 'image/*';
-            inp.addEventListener('change', function() {
-                var f = inp.files && inp.files[0];
-                if (!f) return;
-                toast('压缩中…');
-                compressImage(f, function(dataUrl) { cb(dataUrl); });
             });
-            inp.click();
+
+            // Total days
+            var total = 0;
+            Object.keys(store.days).forEach(function(k) {
+                var e = store.days[k];
+                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) total++;
+            });
+
+            // Streak (back from today)
+            var streak = 0;
+            var d = new Date();
+            for (var i = 0; i < 365; i++) {
+                var k = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
+                var e = store.days[k];
+                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) streak++;
+                else break;
+                d.setDate(d.getDate() - 1);
+            }
+
+            bigStatMonth.textContent = monthDays;
+            bigStatMonthOf.textContent = '/ ' + daysInMonth + ' 天';
+            bigStatStreak.textContent = streak;
+            bigStatTotal.textContent = total;
+            bigStatItems.textContent = monthItems;
+
+            // Top exercises (this month)
+            topListMeta.textContent = (view.y + ' 年 ' + (view.m+1) + ' 月');
+            var entries = Object.keys(counts).map(function(k){ return [k, counts[k]]; });
+            entries.sort(function(a,b){ return b[1] - a[1]; });
+            entries = entries.slice(0, 8);
+            topList.innerHTML = '';
+            if (!entries.length) {
+                topList.innerHTML = '<div class="top-empty">本月还没有运动记录</div>';
+            } else {
+                var max = entries[0][1];
+                entries.forEach(function(p) {
+                    var pct = Math.round(p[1] / max * 100);
+                    var row = document.createElement('div');
+                    row.className = 'top-row';
+                    row.innerHTML =
+                        '<div class="top-name">' + escapeHtml(p[0]) + '</div>' +
+                        '<div class="top-bar"><span style="width:' + pct + '%"></span></div>' +
+                        '<div class="top-count">' + p[1] + '</div>';
+                    topList.appendChild(row);
+                });
+            }
+
+            // 30-day heatmap (today back 30)
+            heatStrip.innerHTML = '';
+            var todayD = new Date();
+            for (var i = 29; i >= 0; i--) {
+                var dt = new Date(todayD); dt.setDate(dt.getDate() - i);
+                var key = dateKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
+                var entry = store.days[key];
+                var n = (entry && entry.exercises && entry.exercises.indexOf('休息') < 0) ? entry.exercises.length : 0;
+                var lvl = n === 0 ? 0 : (n >= 4 ? 3 : (n >= 2 ? 2 : 1));
+                var cell = document.createElement('div');
+                cell.className = 'heat-cell' + (lvl ? ' level-' + lvl : '');
+                cell.title = key + (n ? ' · ' + n + ' 项' : ' · 无记录');
+                heatStrip.appendChild(cell);
+            }
         }
 
         // ---------- Export / Import ----------
@@ -777,13 +862,10 @@
                         return;
                     }
                     if (!data.days) data.days = {};
-                    if (!data.weeks) data.weeks = [];
-                    if (!data.baseline) data.baseline = { front: null, side: null, back: null, date: null };
                     store = data;
                     if (saveStore(true)) {
                         renderCalendar();
-                        renderWeeks();
-                        if (!baselineReveal.hidden) renderBaseline();
+                        renderVisualStats();
                         toast('导入成功');
                     }
                 } catch (err) {
@@ -792,62 +874,6 @@
                 e.target.value = '';
             };
             r.readAsText(f);
-        });
-
-        // ---------- Baseline ----------
-        var baselineCover = document.getElementById('baselineCover');
-        var baselineReveal = document.getElementById('baselineReveal');
-        var baselineCard = document.getElementById('baselineCard');
-
-        baselineCover.addEventListener('click', function() {
-            baselineCover.style.display = 'none';
-            baselineReveal.hidden = false;
-            baselineCard.classList.add('revealed');
-            renderBaseline();
-        });
-        document.getElementById('baselineHide').addEventListener('click', function() {
-            baselineCover.style.display = '';
-            baselineReveal.hidden = true;
-            baselineCard.classList.remove('revealed');
-        });
-
-        function renderBaseline() {
-            ['front','side','back'].forEach(function(slot) {
-                var cell = document.querySelector('.baseline-slot[data-slot="'+slot+'"] .baseline-img');
-                var src = store.baseline[slot];
-                if (src) {
-                    cell.innerHTML = '<img src="'+src+'" alt="'+slot+'">';
-                    cell.dataset.empty = 'false';
-                } else {
-                    cell.innerHTML = '<span class="slot-plus">＋</span>';
-                    cell.dataset.empty = 'true';
-                }
-            });
-            document.getElementById('baselineDate').value = store.baseline.date || '';
-        }
-
-        document.querySelectorAll('.baseline-slot').forEach(function(slot) {
-            var key = slot.dataset.slot;
-            var btn = slot.querySelector('.baseline-upload');
-            var img = slot.querySelector('.baseline-img');
-            btn.addEventListener('click', function() {
-                pickPhoto(function(dataUrl) {
-                    store.baseline[key] = dataUrl;
-                    saveStore();
-                    renderBaseline();
-                });
-            });
-            img.addEventListener('click', function() {
-                if (img.dataset.empty === 'false') {
-                    var i = img.querySelector('img');
-                    if (i) openLightbox(i.src);
-                }
-            });
-        });
-
-        document.getElementById('baselineDate').addEventListener('change', function() {
-            store.baseline.date = this.value;
-            saveStore();
         });
 
         // ---------- Lightbox ----------
@@ -876,8 +902,13 @@
 
         // ---------- Init ----------
         renderCalendar();
-        renderWeeks();
+        renderVisualStats();
+        renderCompare();
         updateStorageStat();
+        fetchManifest().then(function(m) {
+            if (m) manifest = m;
+            renderCompare();
+        });
     </script>
 </body>
 </html>
