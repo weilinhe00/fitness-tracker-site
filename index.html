@@ -94,8 +94,7 @@
                     <div>
                         <h2>训练日历</h2>
                         <blockquote class="section-quote">
-                            所有摧毁身体的快乐<br>
-                            都无法超过塑造身体带来的快乐。
+                            所有摧毁身体的快乐都无法超过塑造身体带来的快乐。
                         </blockquote>
                     </div>
                 </div>
@@ -155,7 +154,7 @@
                     <article class="visual-panel">
                         <div class="panel-heading">
                             <h3>常做的运动</h3>
-                            <span id="topListMeta">本月</span>
+                            <span id="topListMeta">This month</span>
                         </div>
                         <div class="top-list" id="topList"></div>
                     </article>
@@ -163,16 +162,17 @@
                     <article class="visual-panel">
                         <div class="panel-heading">
                             <h3>近 30 天热力</h3>
-                            <span id="heatMeta">每格代表 1 天</span>
+                            <span id="heatMeta">Each cell = 1 day</span>
                         </div>
                         <div class="heat-strip" id="heatStrip"></div>
                         <div class="heat-legend">
-                            <span>少</span>
+                            <span>Less</span>
                             <span class="heat-cell level-1"></span>
                             <span class="heat-cell level-2"></span>
                             <span class="heat-cell level-3"></span>
-                            <span>多</span>
+                            <span>More</span>
                         </div>
+                        <p class="heat-hint" id="heatHint" hidden>Not enough data yet — keep logging training days to see patterns.</p>
                     </article>
                 </div>
             </section>
@@ -366,35 +366,6 @@
                 var el = document.getElementById('statStorage');
                 if (el) el.textContent = kb < 1024 ? kb + ' KB' : (kb / 1024).toFixed(1) + ' MB';
             } catch (e) {}
-        }
-
-        // ---------- Image compression ----------
-        // Resize to max 1280px on long edge, JPEG 0.85 — keeps photos under ~250 KB each
-        function compressImage(file, cb) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var img = new Image();
-                img.onload = function() {
-                    var maxSide = 1280;
-                    var w = img.naturalWidth, h = img.naturalHeight;
-                    var scale = Math.min(1, maxSide / Math.max(w, h));
-                    var cw = Math.round(w * scale), ch = Math.round(h * scale);
-                    var canvas = document.createElement('canvas');
-                    canvas.width = cw; canvas.height = ch;
-                    var ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, cw, ch);
-                    try {
-                        var out = canvas.toDataURL('image/jpeg', 0.85);
-                        cb(out);
-                    } catch (e) {
-                        cb(reader.result); // fallback
-                    }
-                };
-                img.onerror = function() { cb(reader.result); };
-                img.src = reader.result;
-            };
-            reader.onerror = function() { toast('读取图片失败', true); };
-            reader.readAsDataURL(file);
         }
 
         // ---------- Calendar ----------
@@ -793,13 +764,13 @@
             bigStatItems.textContent = monthItems;
 
             // Top exercises (this month)
-            topListMeta.textContent = (view.y + ' 年 ' + (view.m+1) + ' 月');
+            topListMeta.textContent = MONTH_EN[view.m] + ' ' + view.y;
             var entries = Object.keys(counts).map(function(k){ return [k, counts[k]]; });
             entries.sort(function(a,b){ return b[1] - a[1]; });
             entries = entries.slice(0, 8);
             topList.innerHTML = '';
             if (!entries.length) {
-                topList.innerHTML = '<div class="top-empty">本月还没有运动记录</div>';
+                topList.innerHTML = '<div class="top-empty">No training logged this month — tap a date on the calendar to start.</div>';
             } else {
                 var max = entries[0][1];
                 entries.forEach(function(p) {
@@ -817,17 +788,22 @@
             // 30-day heatmap (today back 30)
             heatStrip.innerHTML = '';
             var todayD = new Date();
+            var heatActive = 0;
             for (var i = 29; i >= 0; i--) {
                 var dt = new Date(todayD); dt.setDate(dt.getDate() - i);
                 var key = dateKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
                 var entry = store.days[key];
                 var n = (entry && entry.exercises && entry.exercises.indexOf('休息') < 0) ? entry.exercises.length : 0;
+                if (n) heatActive++;
                 var lvl = n === 0 ? 0 : (n >= 4 ? 3 : (n >= 2 ? 2 : 1));
                 var cell = document.createElement('div');
                 cell.className = 'heat-cell' + (lvl ? ' level-' + lvl : '');
-                cell.title = key + (n ? ' · ' + n + ' 项' : ' · 无记录');
+                cell.title = key + (n ? ' · ' + n + ' items' : ' · no entry');
                 heatStrip.appendChild(cell);
             }
+            // Hint when too few data points to be meaningful
+            var hint = document.getElementById('heatHint');
+            if (hint) hint.hidden = heatActive >= 3;
         }
 
         // ---------- Export / Import ----------

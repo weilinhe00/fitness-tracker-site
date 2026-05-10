@@ -1,5 +1,5 @@
 :root {
-    --accent: #3a6cb8;
+    --accent: #1d1d1f;
     --bg: #ffffff;
     --text: #1d1d1f;
     --text-secondary: #6e6e73;
@@ -307,8 +307,8 @@ nav.main-nav {
     font-weight: 700;
     line-height: 1;
 }
-.toast.is-error { background: var(--accent); color: #fff; }
-.toast.is-error .toast-icon { background: rgba(255,255,255,0.25); }
+.toast.is-error { background: #1d1d1f; color: #fff; }
+.toast.is-error .toast-icon { background: rgba(255,255,255,0.25); color: #ffb8b8; }
 
 /* Sections */
 section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
@@ -430,9 +430,9 @@ section:last-of-type { margin-bottom: 0; }
     border-radius: 3px;
     transition: transform 0.15s ease;
 }
-.heat-cell.level-1 { background: rgba(58, 108, 184,0.25); }
-.heat-cell.level-2 { background: rgba(58, 108, 184,0.55); }
-.heat-cell.level-3 { background: rgba(58, 108, 184,0.9); }
+.heat-cell.level-1 { background: rgba(29, 29, 31, 0.25); }
+.heat-cell.level-2 { background: rgba(29, 29, 31, 0.55); }
+.heat-cell.level-3 { background: rgba(29, 29, 31, 0.9); }
 .heat-cell:hover { transform: scale(1.15); }
 
 .heat-legend {
@@ -447,6 +447,12 @@ section:last-of-type { margin-bottom: 0; }
     width: 10px; height: 10px;
     aspect-ratio: auto;
     border-radius: 2px;
+}
+.heat-hint {
+    margin-top: 0.85rem;
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    line-height: 1.55;
 }
 
 /* Compare section (起始 vs 最新) */
@@ -561,6 +567,21 @@ h2 {
     font-size: 0.88rem;
     margin-bottom: 1.75rem;
     line-height: 1.65;
+}
+
+/* Section quote — single italic line under section heading */
+.section-quote {
+    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+    font-style: normal;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+    color: var(--text-secondary);
+    margin: 0 0 1.75rem;
+    padding: 0.05rem 0 0.05rem 0.9rem;
+    border-left: 2px solid var(--text-tertiary);
+    quotes: none;
 }
 
 .cal-head {
@@ -716,8 +737,8 @@ h2 {
 }
 
 .cal-cell.has-entry {
-    background: linear-gradient(180deg, rgba(58, 108, 184,0.025) 0%, rgba(58, 108, 184,0) 100%);
-    border-color: rgba(58, 108, 184,0.25);
+    background: linear-gradient(180deg, rgba(29, 29, 31, 0.025) 0%, rgba(29, 29, 31, 0.0) 100%);
+    border-color: rgba(29, 29, 31, 0.25);
 }
 
 .cal-day {
@@ -747,7 +768,7 @@ h2 {
     white-space: nowrap;
 }
 .cal-cell.has-entry .cal-tag {
-    background: rgba(58, 108, 184,0.08);
+    background: rgba(29, 29, 31, 0.08);
     color: var(--accent);
 }
 .cal-tag.more { background: transparent; color: var(--text-tertiary); padding-left: 0; }
@@ -1323,8 +1344,7 @@ footer {
     .modal-card { max-height: 95vh; }
     .modal-head, .modal-body, .modal-foot { padding-left: 1.1rem; padding-right: 1.1rem; }
 
-    .hero-quote { margin-bottom: 2rem; padding-bottom: 1.5rem; }
-    .hero-quote blockquote { font-size: 1.15rem; line-height: 1.5; }
+    .section-quote { font-size: 0.98rem; padding-left: 0.75rem; }
 }
 
 /* Phone — really narrow */
@@ -1390,16 +1410,11 @@ footer {
         justify-content: center;
     }
 
-    .hero-quote {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.25rem;
+    .section-quote {
+        font-size: 0.95rem;
+        line-height: 1.55;
+        padding: 0.1rem 0 0.1rem 0.7rem;
     }
-    .hero-quote blockquote {
-        font-size: 1.05rem;
-        font-weight: 600;
-        line-height: 1.5;
-    }
-    .hero-quote blockquote br { display: none; }
 
     section { margin-bottom: 2rem; }
     h2 { font-size: 1.05rem; }
@@ -1545,8 +1560,8 @@ footer {
     .cal-cell { background: #0d0d0f; border-color: #2c2c2e; }
     .cal-cell.muted { background: #1c1c1e; }
     .cal-cell:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
-    .cal-cell.has-entry { background: linear-gradient(180deg, rgba(58, 108, 184,0.08) 0%, rgba(58, 108, 184,0) 100%); border-color: rgba(58, 108, 184,0.4); }
-    .cal-cell.has-entry .cal-tag { background: rgba(58, 108, 184,0.18); color: #8aa9d6; }
+    .cal-cell.has-entry { background: linear-gradient(180deg, rgba(29, 29, 31, 0.08) 0%, rgba(29, 29, 31, 0.0) 100%); border-color: rgba(29, 29, 31, 0.4); }
+    .cal-cell.has-entry .cal-tag { background: rgba(29, 29, 31, 0.18); color: #d2d2d7; }
     .baseline-cover { background: #1c1c1e; }
     .baseline-cover:hover { background: #242427; }
     .photo-slot, .baseline-img { background: #1c1c1e; }
