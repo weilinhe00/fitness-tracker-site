@@ -223,32 +223,21 @@ nav.main-nav {
 .year-filter button:hover { color: var(--text); }
 .year-filter button.active { color: var(--text); font-weight: 500; }
 
-.stats-mini {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
+/* Backup section (bottom of page) */
+.backup-section {
+    margin-top: 5rem;
+    padding-top: 2.5rem;
     border-top: 1px solid var(--hairline);
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
 }
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-size: 0.82rem;
-}
-.stat-label { color: var(--text-tertiary); }
-.stat-value { color: var(--text); font-weight: 500; font-variant-numeric: tabular-nums; }
-.stat-storage .stat-value { color: var(--text-secondary); font-weight: 400; }
+.backup-section h2 { font-size: 1.05rem; }
+.backup-section .subtitle { font-size: 0.82rem; }
 
-/* Data export/import buttons */
 .data-actions {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--hairline);
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
 }
 .data-btn {
     display: inline-flex;
@@ -258,13 +247,12 @@ nav.main-nav {
     border: 1px solid var(--hairline);
     color: var(--text-secondary);
     font-family: inherit;
-    font-size: 0.78rem;
-    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    padding: 0.5rem 1rem;
     border-radius: 999px;
     cursor: pointer;
     transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     text-align: left;
-    width: 100%;
     justify-content: flex-start;
 }
 .data-btn:hover { color: var(--text); border-color: var(--text); }
@@ -869,6 +857,25 @@ h2 {
 .photo-slot img {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover; display: block;
+    /* Discourage casual download / drag / long-press save */
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+/* Lightbox image: block save shortcuts too */
+.lightbox img {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.avatar img {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 .slot-plus { font-size: 1.4rem; color: var(--text-tertiary); font-weight: 300; }
 .photo-slot-label {
@@ -1285,14 +1292,6 @@ footer {
         margin-top: 0.5rem;
         margin-bottom: 1.5rem;
     }
-    .stats-mini {
-        flex-direction: row;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        gap: 1.25rem 1.5rem;
-    }
-    .stat-row { flex-direction: column; gap: 0.1rem; align-items: flex-start; }
     .data-actions {
         flex-direction: row;
         flex-wrap: wrap;
@@ -1388,20 +1387,6 @@ footer {
         background: var(--text);
         color: var(--bg);
         border-color: var(--text);
-    }
-
-    .stats-mini {
-        gap: 0.5rem;
-        margin-top: 0.85rem;
-        padding-top: 0.85rem;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-    .stat-row {
-        flex-direction: row;
-        gap: 0.4rem;
-        align-items: baseline;
-        font-size: 0.78rem;
     }
 
     .data-actions {
@@ -1516,7 +1501,6 @@ footer {
         padding: 1rem;
     }
     .sidebar { position: static; margin-bottom: 1.5rem; }
-    .stats-mini { flex-direction: row; gap: 1.5rem; border-top: 1px solid #d2d2d7; }
     nav.main-nav { margin-bottom: 1rem; padding-bottom: 0.5rem; }
     section { margin-bottom: 1.5rem; page-break-inside: avoid; }
     .calendar-card { padding: 0.75rem; page-break-inside: avoid; }

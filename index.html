@@ -31,7 +31,7 @@
         <aside class="sidebar">
             <header class="header">
                 <div class="avatar">
-                    <img src="photos/weilinhe.jpg" alt="Weilin He" onerror="this.style.display='none'">
+                    <img src="photos/weilinhe.jpg" alt="Weilin He" onerror="this.style.display='none'" draggable="false" oncontextmenu="return false">
                 </div>
                 <h1 class="name-en">Fitness Diary</h1>
                 <div class="name-cn">每日健身记录</div>
@@ -55,36 +55,6 @@
                 <button type="button" data-section="compare">对比</button>
             </div>
 
-            <div class="stats-mini" id="statsMini">
-                <div class="stat-row">
-                    <span class="stat-label">本月训练</span>
-                    <span class="stat-value" id="statMonth">0 天</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">连续天数</span>
-                    <span class="stat-value" id="statStreak">0 天</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">总记录</span>
-                    <span class="stat-value" id="statTotal">0 天</span>
-                </div>
-                <div class="stat-row stat-storage">
-                    <span class="stat-label">已用空间</span>
-                    <span class="stat-value" id="statStorage">— KB</span>
-                </div>
-            </div>
-
-            <div class="data-actions">
-                <button type="button" class="data-btn" id="exportData" title="导出 JSON 备份">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    <span>导出备份</span>
-                </button>
-                <button type="button" class="data-btn" id="importData" title="从 JSON 文件恢复">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    <span>导入备份</span>
-                </button>
-            </div>
-            <input type="file" id="importFile" accept="application/json,.json" hidden>
         </aside>
 
         <main class="content">
@@ -222,6 +192,26 @@
                 </div>
             </section>
 
+            <section class="backup-section" id="backup">
+                <div class="cal-head">
+                    <div>
+                        <h2>数据备份</h2>
+                        <p class="subtitle">日历记录保存在本浏览器，可导出 JSON 备份或换设备时导入恢复。</p>
+                    </div>
+                </div>
+                <div class="data-actions">
+                    <button type="button" class="data-btn" id="exportData" title="导出 JSON 备份">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span>导出备份</span>
+                    </button>
+                    <button type="button" class="data-btn" id="importData" title="从 JSON 文件恢复">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <span>导入备份</span>
+                    </button>
+                </div>
+                <input type="file" id="importFile" accept="application/json,.json" hidden>
+            </section>
+
         </main>
 
         <footer>&copy; 2026 Weilin He · Fitness Diary</footer>
@@ -283,7 +273,7 @@
     <div class="lightbox" id="lightbox" hidden>
         <div class="lightbox-backdrop" data-close></div>
         <button type="button" class="lightbox-close" data-close aria-label="Close">×</button>
-        <img id="lightboxImg" src="" alt="">
+        <img id="lightboxImg" src="" alt="" draggable="false" oncontextmenu="return false">
     </div>
 
     <script>
@@ -326,7 +316,6 @@
             try {
                 localStorage.setItem(STORE_KEY, JSON.stringify(store));
                 if (!silent) toast('已保存到浏览器');
-                updateStorageStat();
                 return true;
             } catch (e) {
                 if (e && (e.name === 'QuotaExceededError' || /quota/i.test(e.message))) {
@@ -360,15 +349,6 @@
             }, isError ? 4000 : 1800);
         }
 
-        // ---------- Storage stats ----------
-        function updateStorageStat() {
-            try {
-                var raw = localStorage.getItem(STORE_KEY) || '';
-                var kb = Math.round(raw.length / 1024);
-                var el = document.getElementById('statStorage');
-                if (el) el.textContent = kb < 1024 ? kb + ' KB' : (kb / 1024).toFixed(1) + ' MB';
-            } catch (e) {}
-        }
 
         // ---------- Calendar ----------
         var WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六'];
@@ -451,7 +431,6 @@
                 calGrid.appendChild(cell);
             }
 
-            renderStats();
             if (typeof renderVisualStats === 'function') renderVisualStats();
         }
 
@@ -571,37 +550,6 @@
             }
         });
 
-        // ---------- Stats ----------
-        function renderStats() {
-            var monthPrefix = view.y + '-' + String(view.m+1).padStart(2,'0');
-            var monthCount = 0;
-            Object.keys(store.days).forEach(function(k) {
-                if (k.indexOf(monthPrefix) === 0) {
-                    var e = store.days[k];
-                    if (e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) monthCount++;
-                }
-            });
-            document.getElementById('statMonth').textContent = monthCount + ' 天';
-
-            // Streak (back from today)
-            var streak = 0;
-            var d = new Date();
-            for (var i = 0; i < 365; i++) {
-                var k = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
-                var e = store.days[k];
-                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) streak++;
-                else break;
-                d.setDate(d.getDate() - 1);
-            }
-            document.getElementById('statStreak').textContent = streak + ' 天';
-
-            var total = 0;
-            Object.keys(store.days).forEach(function(k) {
-                var e = store.days[k];
-                if (e.exercises && e.exercises.length) total++;
-            });
-            document.getElementById('statTotal').textContent = total + ' 天';
-        }
 
         // ---------- Photos (loaded from photos/manifest.json) ----------
         var manifest = { avatar: null, baseline: null, weekly: [] };
@@ -640,8 +588,8 @@
             compareCard.classList.remove('revealed');
         });
 
-        // Photo position labels by filename order: 1=正面 2=侧面 3=背面 4=手臂 5=背部
-        var POSITION_LABELS = ['正面', '侧面', '背面', '手臂', '背部'];
+        // Photo position labels by filename order: 1=正面 2=侧面 3=背面 4=手臂
+        var POSITION_LABELS = ['正面', '侧面', '背面', '手臂'];
         function labelFor(src, idx) {
             // Try to read the filename and map 1.jpg → 正面 etc.
             var m = String(src).match(/\/(\d+)\.[a-zA-Z]+$/);
@@ -666,7 +614,7 @@
                 btn.className = 'photo-slot filled';
                 btn.setAttribute('data-src', src);
                 btn.innerHTML =
-                    '<img src="' + escapeHtml(src) + '" alt="' + labelPrefix + ' · ' + label + '" loading="lazy">' +
+                    '<img src="' + escapeHtml(src) + '" alt="' + labelPrefix + ' · ' + label + '" loading="lazy" draggable="false" oncontextmenu="return false">' +
                     '<span class="photo-slot-label">' + label + '</span>';
                 btn.addEventListener('click', function() { openLightbox(src); });
                 container.appendChild(btn);
@@ -912,7 +860,6 @@
         renderCalendar();
         renderVisualStats();
         renderCompare();
-        updateStorageStat();
         fetchManifest().then(function(m) {
             if (m) manifest = m;
             renderCompare();
