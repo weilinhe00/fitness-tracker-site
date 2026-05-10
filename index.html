@@ -35,10 +35,6 @@
                 </div>
                 <h1 class="name-en">Fitness Diary</h1>
                 <div class="name-cn">每日健身记录</div>
-                <blockquote class="role-quote">
-                    所有摧毁身体的快乐<br>
-                    都无法超过塑造身体带来的快乐。
-                </blockquote>
 
                 <div class="contacts">
                     <span class="loc" title="坚持">
@@ -97,7 +93,10 @@
                 <div class="cal-head">
                     <div>
                         <h2>训练日历</h2>
-                        <p class="subtitle">点击任意日期记录今天的训练 — 数据自动保存在本地浏览器。</p>
+                        <blockquote class="section-quote">
+                            所有摧毁身体的快乐<br>
+                            都无法超过塑造身体带来的快乐。
+                        </blockquote>
                     </div>
                 </div>
 
@@ -182,7 +181,7 @@
                 <div class="cal-head">
                     <div>
                         <h2>起始 vs 最新</h2>
-                        <p class="subtitle">在本地 <code>photos/</code> 下按日期建子文件夹（例如 <code>2026.5.17/</code>）放入 4 张图，<code>git push</code> 后自动出现 — 最早的那次作为起始，最新的那次用于对比。</p>
+                        <p class="subtitle" id="compareSubtitle">基于初始照片和至今对比。</p>
                     </div>
                 </div>
 
@@ -689,42 +688,42 @@
             var b = manifest.baseline;
             // newest weekly entry
             var latest = (manifest.weekly && manifest.weekly.length) ? manifest.weekly[0] : null;
+            var sub = document.getElementById('compareSubtitle');
 
+            // State 1: nothing at all
             if (!b && !latest) {
+                compareCard.classList.remove('only-baseline');
+                if (sub) sub.textContent = '尚未添加照片。';
                 compareStartDate.textContent = '—';
                 compareEndDate.textContent = '—';
                 compareSpanLabel.textContent = '';
                 buildPhotoGrid(compareStartPhotos, [], '起始');
                 buildPhotoGrid(compareEndPhotos, [], '最新');
-                compareStartPhotos.innerHTML = '<div class="compare-empty" style="grid-column:1/-1;">在 <code>photos/</code> 下新建一个日期文件夹（例如 <code>2026.5.10</code>）放入 4 张图。</div>';
-                compareEndPhotos.innerHTML = '<div class="compare-empty" style="grid-column:1/-1;">再加一个新日期的文件夹后这里就会显示对比。</div>';
                 return;
             }
 
-            if (b) {
+            // State 2: only baseline — show single column
+            if (b && !latest) {
+                compareCard.classList.add('only-baseline');
+                if (sub) sub.textContent = '只有起始记录 · ' + prettyDate(b.date);
                 compareStartDate.textContent = prettyDate(b.date);
                 buildPhotoGrid(compareStartPhotos, b.photos, '起始');
-            } else {
-                compareStartDate.textContent = '—';
-                buildPhotoGrid(compareStartPhotos, [], '起始');
-            }
-
-            if (latest) {
-                compareEndDate.textContent = prettyDate(latest.date);
-                buildPhotoGrid(compareEndPhotos, latest.photos, '最新');
-            } else {
-                compareEndDate.textContent = '尚未上传';
+                // clear right column to keep DOM tidy
                 buildPhotoGrid(compareEndPhotos, [], '最新');
-                compareEndPhotos.innerHTML = '<div class="compare-empty" style="grid-column:1/-1;">还没有第二组对比图<br><small>再加一个新日期的文件夹试试。</small></div>';
+                compareEndDate.textContent = '';
+                compareSpanLabel.textContent = '';
+                return;
             }
 
-            // Span label
-            if (b && latest) {
-                var span = daysBetween(b.date, latest.date);
-                if (span !== null) compareSpanLabel.textContent = '相隔 ' + span + ' 天';
-            } else if (b) {
-                compareSpanLabel.textContent = '只有起始记录 — 等待新的对比';
-            }
+            // State 3: full comparison
+            compareCard.classList.remove('only-baseline');
+            compareStartDate.textContent = prettyDate(b.date);
+            compareEndDate.textContent = prettyDate(latest.date);
+            buildPhotoGrid(compareStartPhotos, b.photos, '起始');
+            buildPhotoGrid(compareEndPhotos, latest.photos, '最新');
+            var span = daysBetween(b.date, latest.date);
+            compareSpanLabel.textContent = (span !== null) ? '相隔 ' + span + ' 天' : '';
+            if (sub) sub.textContent = '基于 ' + prettyDate(b.date) + ' 初始照片和至今的对比。';
         }
 
         function daysBetween(a, b) {
