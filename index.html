@@ -16,12 +16,12 @@
             <div class="nav-links" id="navLinks">
                 <a href="#calendar" class="active">日历</a>
                 <a href="#stats">统计</a>
-                <a href="#compare">对比</a>
+                <a href="#compare">效果对比</a>
             </div>
             <div class="nav-links popup" id="navLinksPopup">
                 <a href="#calendar" class="active">日历</a>
                 <a href="#stats">统计</a>
-                <a href="#compare">对比</a>
+                <a href="#compare">效果对比</a>
             </div>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
                 <span class="hamburger"><span></span><span></span><span></span></span>
@@ -52,7 +52,7 @@
             <div class="year-filter" id="yearFilter">
                 <button type="button" data-section="calendar" class="active">日历</button>
                 <button type="button" data-section="stats">统计</button>
-                <button type="button" data-section="compare">对比</button>
+                <button type="button" data-section="compare">效果对比</button>
             </div>
 
         </aside>
@@ -96,17 +96,17 @@
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-card big monthly">
-                        <span class="stat-card-tag">本月</span>
+                    <div class="stat-card big alltime">
+                        <span class="stat-card-tag">累计</span>
                         <span class="stat-card-label">训练天数</span>
-                        <strong id="bigStatMonth">0</strong>
-                        <small id="bigStatMonthOf">/ 0 天</small>
+                        <strong id="bigStatTotal">0</strong>
+                        <small id="bigStatTotalSince">天</small>
                     </div>
-                    <div class="stat-card big monthly">
-                        <span class="stat-card-tag">本月</span>
-                        <span class="stat-card-label">运动项次数</span>
-                        <strong id="bigStatItems">0</strong>
-                        <small>次</small>
+                    <div class="stat-card big alltime">
+                        <span class="stat-card-tag">累计</span>
+                        <span class="stat-card-label">训练时长</span>
+                        <strong id="bigStatHours">0</strong>
+                        <small id="bigStatHoursUnit">分钟</small>
                     </div>
                     <div class="stat-card big alltime">
                         <span class="stat-card-tag">累计</span>
@@ -116,16 +116,16 @@
                     </div>
                     <div class="stat-card big alltime">
                         <span class="stat-card-tag">累计</span>
-                        <span class="stat-card-label">总训练天数</span>
-                        <strong id="bigStatTotal">0</strong>
-                        <small id="bigStatTotalSince">天</small>
+                        <span class="stat-card-label">空白天数</span>
+                        <strong id="bigStatBlank">0</strong>
+                        <small id="bigStatBlankUnit">天</small>
                     </div>
                 </div>
 
                 <div class="visual-grid">
                     <article class="visual-panel">
                         <div class="panel-heading">
-                            <h3>常做的运动</h3>
+                            <h3>本月常做的运动</h3>
                             <span id="topListMeta">This month</span>
                         </div>
                         <div class="top-list" id="topList"></div>
@@ -152,8 +152,8 @@
             <section id="compare">
                 <div class="cal-head">
                     <div>
-                        <h2>起始 vs 最新</h2>
-                        <p class="subtitle" id="compareSubtitle">基于初始照片和至今对比。</p>
+                        <h2>效果对比</h2>
+                        <p class="subtitle">基于 photos/ 下各日期文件夹中的照片，自动展示起始效果与最新一周的对比。</p>
                     </div>
                 </div>
 
@@ -237,6 +237,19 @@
                     <button type="button" class="primary-btn" id="addExercise">添加</button>
                 </div>
                 <div class="exercise-tags" id="exerciseTags"></div>
+
+                <label class="field-label" style="margin-top:1.5rem;">训练时长（分钟）</label>
+                <div class="duration-row">
+                    <input type="number" id="dayMinutes" min="0" max="600" step="5" placeholder="例如 45">
+                    <span class="duration-suffix">分钟</span>
+                    <div class="duration-quick">
+                        <button type="button" class="quick-chip" data-min="15">15</button>
+                        <button type="button" class="quick-chip" data-min="30">30</button>
+                        <button type="button" class="quick-chip" data-min="45">45</button>
+                        <button type="button" class="quick-chip" data-min="60">60</button>
+                        <button type="button" class="quick-chip" data-min="90">90</button>
+                    </div>
+                </div>
 
                 <label class="field-label" style="margin-top:1.5rem;">备注（可选）</label>
                 <textarea id="dayNote" rows="3" placeholder="今日感受、强度、状态…"></textarea>
@@ -461,15 +474,17 @@
         var exerciseInput = document.getElementById('exerciseInput');
         var exerciseTags = document.getElementById('exerciseTags');
         var dayNote = document.getElementById('dayNote');
+        var dayMinutesInput = document.getElementById('dayMinutes');
         var currentKey = null;
         var workingTags = [];
 
         function openDay(key) {
             currentKey = key;
             var d = fromKey(key);
-            var entry = store.days[key] || { exercises: [], note: '' };
+            var entry = store.days[key] || { exercises: [], note: '', minutes: 0 };
             workingTags = entry.exercises.slice();
             dayNote.value = entry.note || '';
+            dayMinutesInput.value = entry.minutes ? String(entry.minutes) : '';
             dayTitle.textContent = (d.getMonth()+1) + ' 月 ' + d.getDate() + ' 日 · ' + WEEK_CN[d.getDay()];
             var today = new Date();
             var isToday = d.toDateString() === today.toDateString();
@@ -514,19 +529,30 @@
             if (e.key === 'Enter') { e.preventDefault(); addExerciseFromInput(); }
         });
 
-        document.querySelectorAll('.quick-chip').forEach(function(b) {
+        document.querySelectorAll('.quick-chip[data-quick]').forEach(function(b) {
             b.addEventListener('click', function() {
                 workingTags.push(this.dataset.quick);
                 renderTags();
             });
         });
+        document.querySelectorAll('.quick-chip[data-min]').forEach(function(b) {
+            b.addEventListener('click', function() {
+                dayMinutesInput.value = this.dataset.min;
+            });
+        });
 
         document.getElementById('saveDay').addEventListener('click', function() {
             if (!currentKey) return;
-            if (!workingTags.length && !dayNote.value.trim()) {
+            var mins = parseInt(dayMinutesInput.value, 10);
+            if (isNaN(mins) || mins < 0) mins = 0;
+            if (!workingTags.length && !dayNote.value.trim() && !mins) {
                 delete store.days[currentKey];
             } else {
-                store.days[currentKey] = { exercises: workingTags.slice(), note: dayNote.value.trim() };
+                store.days[currentKey] = {
+                    exercises: workingTags.slice(),
+                    note: dayNote.value.trim(),
+                    minutes: mins
+                };
             }
             saveStore();
             renderCalendar();
@@ -588,16 +614,21 @@
             compareCard.classList.remove('revealed');
         });
 
-        // Photo position labels by filename order: 1=正面 2=侧面 3=背面 4=手臂
+        // Photo label = filename stem (e.g., "正面.jpg" → "正面"), with
+        // numeric fallback (1.jpg → 正面 / 2.jpg → 侧面 …)
         var POSITION_LABELS = ['正面', '侧面', '背面', '手臂'];
         function labelFor(src, idx) {
-            // Try to read the filename and map 1.jpg → 正面 etc.
-            var m = String(src).match(/\/(\d+)\.[a-zA-Z]+$/);
+            var m = String(src).match(/\/([^/]+)\.[a-zA-Z]+$/);
             if (m) {
-                var n = parseInt(m[1], 10);
-                if (n >= 1 && n <= POSITION_LABELS.length) return POSITION_LABELS[n - 1];
+                var stem = decodeURIComponent(m[1]);
+                // Numeric filename → use position table
+                var n = parseInt(stem, 10);
+                if (!isNaN(n) && n >= 1 && n <= POSITION_LABELS.length) {
+                    return POSITION_LABELS[n - 1];
+                }
+                // Otherwise use the filename itself as the label
+                return stem;
             }
-            // Fallback: by index
             return POSITION_LABELS[idx] || ('图 ' + (idx + 1));
         }
 
@@ -623,14 +654,10 @@
 
         function renderCompare() {
             var b = manifest.baseline;
-            // newest weekly entry
             var latest = (manifest.weekly && manifest.weekly.length) ? manifest.weekly[0] : null;
-            var sub = document.getElementById('compareSubtitle');
 
-            // State 1: nothing at all
             if (!b && !latest) {
                 compareCard.classList.remove('only-baseline');
-                if (sub) sub.textContent = '尚未添加照片。';
                 compareStartDate.textContent = '—';
                 compareEndDate.textContent = '—';
                 compareSpanLabel.textContent = '';
@@ -639,20 +666,18 @@
                 return;
             }
 
-            // State 2: only baseline — show single column
+            // Only baseline → single column
             if (b && !latest) {
                 compareCard.classList.add('only-baseline');
-                if (sub) sub.textContent = '只有起始记录 · ' + prettyDate(b.date);
                 compareStartDate.textContent = prettyDate(b.date);
                 buildPhotoGrid(compareStartPhotos, b.photos, '起始');
-                // clear right column to keep DOM tidy
                 buildPhotoGrid(compareEndPhotos, [], '最新');
                 compareEndDate.textContent = '';
                 compareSpanLabel.textContent = '';
                 return;
             }
 
-            // State 3: full comparison
+            // Full comparison
             compareCard.classList.remove('only-baseline');
             compareStartDate.textContent = prettyDate(b.date);
             compareEndDate.textContent = prettyDate(latest.date);
@@ -660,7 +685,6 @@
             buildPhotoGrid(compareEndPhotos, latest.photos, '最新');
             var span = daysBetween(b.date, latest.date);
             compareSpanLabel.textContent = (span !== null) ? '相隔 ' + span + ' 天' : '';
-            if (sub) sub.textContent = '基于 ' + prettyDate(b.date) + ' 初始照片和至今的对比。';
         }
 
         function daysBetween(a, b) {
@@ -673,46 +697,40 @@
         }
 
         // ---------- Stats visualization ----------
-        var bigStatMonth = document.getElementById('bigStatMonth');
-        var bigStatMonthOf = document.getElementById('bigStatMonthOf');
-        var bigStatStreak = document.getElementById('bigStatStreak');
         var bigStatTotal = document.getElementById('bigStatTotal');
-        var bigStatItems = document.getElementById('bigStatItems');
+        var bigStatTotalSince = document.getElementById('bigStatTotalSince');
+        var bigStatHours = document.getElementById('bigStatHours');
+        var bigStatHoursUnit = document.getElementById('bigStatHoursUnit');
+        var bigStatStreak = document.getElementById('bigStatStreak');
+        var bigStatBlank = document.getElementById('bigStatBlank');
+        var bigStatBlankUnit = document.getElementById('bigStatBlankUnit');
         var topList = document.getElementById('topList');
         var topListMeta = document.getElementById('topListMeta');
         var heatStrip = document.getElementById('heatStrip');
 
         function renderVisualStats() {
             var monthPrefix = view.y + '-' + String(view.m+1).padStart(2,'0');
-            var daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
 
-            var monthDays = 0, monthItems = 0;
-            var counts = {};
+            var counts = {};                           // monthly: top exercises
+            var total = 0;                             // cumulative training days
+            var totalMinutes = 0;                      // cumulative minutes
+            var firstKey = null;
 
-            Object.keys(store.days).forEach(function(k) {
+            Object.keys(store.days).sort().forEach(function(k) {
                 var e = store.days[k];
                 if (!e || !e.exercises) return;
                 var isRest = e.exercises.indexOf('休息') >= 0;
-                if (k.indexOf(monthPrefix) === 0) {
-                    if (e.exercises.length && !isRest) {
-                        monthDays++;
-                        e.exercises.forEach(function(t) {
-                            if (t === '休息') return;
-                            monthItems++;
-                            counts[t] = (counts[t] || 0) + 1;
-                        });
-                    }
-                }
-            });
-
-            // Total all-time training days + earliest training date
-            var total = 0;
-            var firstKey = null;
-            Object.keys(store.days).sort().forEach(function(k) {
-                var e = store.days[k];
-                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) {
+                if (e.exercises.length && !isRest) {
                     total++;
                     if (firstKey === null) firstKey = k;
+                    if (typeof e.minutes === 'number') totalMinutes += e.minutes;
+                }
+                // Top exercises stay monthly
+                if (k.indexOf(monthPrefix) === 0 && e.exercises.length && !isRest) {
+                    e.exercises.forEach(function(t) {
+                        if (t === '休息') return;
+                        counts[t] = (counts[t] || 0) + 1;
+                    });
                 }
             });
 
@@ -727,21 +745,41 @@
                 d.setDate(d.getDate() - 1);
             }
 
-            bigStatMonth.textContent = monthDays;
-            bigStatMonthOf.textContent = '/ ' + daysInMonth + ' 天';
-            bigStatStreak.textContent = streak;
+            // Cumulative training days
             bigStatTotal.textContent = total;
-            bigStatItems.textContent = monthItems;
+            if (firstKey) {
+                var p = firstKey.split('-');
+                bigStatTotalSince.textContent = '天 · 自 ' + p[0] + '.' + (+p[1]) + '.' + (+p[2]) + ' 起';
+            } else {
+                bigStatTotalSince.textContent = '天 · 还没开始';
+            }
 
-            // Total card sub-text: "since first training day"
-            var sinceEl = document.getElementById('bigStatTotalSince');
-            if (sinceEl) {
-                if (firstKey) {
-                    var p = firstKey.split('-');
-                    sinceEl.textContent = '天 · 自 ' + p[0] + '.' + (+p[1]) + '.' + (+p[2]) + ' 起';
-                } else {
-                    sinceEl.textContent = '天 · 还没开始';
-                }
+            // Cumulative training duration
+            if (totalMinutes >= 60) {
+                var hrs = totalMinutes / 60;
+                bigStatHours.textContent = hrs >= 10 ? Math.round(hrs) : hrs.toFixed(1);
+                bigStatHoursUnit.textContent = '小时';
+            } else {
+                bigStatHours.textContent = totalMinutes;
+                bigStatHoursUnit.textContent = '分钟';
+            }
+
+            // Streak
+            bigStatStreak.textContent = streak;
+
+            // Blank days = days from first training to today, minus training days
+            if (firstKey) {
+                var fp = firstKey.split('-');
+                var firstD = new Date(+fp[0], +fp[1]-1, +fp[2]);
+                var today0 = new Date(); today0.setHours(0,0,0,0);
+                firstD.setHours(0,0,0,0);
+                var spanDays = Math.round((today0 - firstD) / 86400000) + 1;
+                var blank = Math.max(0, spanDays - total);
+                bigStatBlank.textContent = blank;
+                bigStatBlankUnit.textContent = '天 · 自 ' + fp[0] + '.' + (+fp[1]) + '.' + (+fp[2]) + ' 起';
+            } else {
+                bigStatBlank.textContent = 0;
+                bigStatBlankUnit.textContent = '天';
             }
 
             // Top exercises (this month)

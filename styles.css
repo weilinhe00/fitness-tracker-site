@@ -1110,6 +1110,43 @@ h2 {
 }
 .tag-input-row input:focus { outline: none; border-color: var(--text); }
 
+.duration-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.duration-row input[type="number"] {
+    width: 110px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    transition: border-color 0.15s ease;
+    -moz-appearance: textfield;
+}
+.duration-row input[type="number"]:focus { outline: none; border-color: var(--text); }
+.duration-row input[type="number"]::-webkit-outer-spin-button,
+.duration-row input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.duration-suffix {
+    font-size: 0.82rem;
+    color: var(--text-tertiary);
+    margin-right: 0.5rem;
+}
+.duration-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-left: auto;
+}
+.duration-quick .quick-chip { font-size: 0.78rem; padding: 0.3rem 0.7rem; }
+
 .exercise-tags {
     display: flex;
     flex-wrap: wrap;
