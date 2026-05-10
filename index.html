@@ -91,7 +91,7 @@
                 <div class="cal-head">
                     <div>
                         <h2>训练统计</h2>
-                        <p class="subtitle">基于日历中的运动记录自动统计 — 切换月份会同步更新。</p>
+                        <p class="subtitle" id="statsSubtitle">累计数据自首次训练起；本月常做的运动会随月份切换同步更新。</p>
                     </div>
                 </div>
 
@@ -747,12 +747,7 @@
 
             // Cumulative training days
             bigStatTotal.textContent = total;
-            if (firstKey) {
-                var p = firstKey.split('-');
-                bigStatTotalSince.textContent = '天 · 自 ' + p[0] + '.' + (+p[1]) + '.' + (+p[2]) + ' 起';
-            } else {
-                bigStatTotalSince.textContent = '天 · 还没开始';
-            }
+            bigStatTotalSince.textContent = '天';
 
             // Cumulative training duration
             if (totalMinutes >= 60) {
@@ -776,10 +771,21 @@
                 var spanDays = Math.round((today0 - firstD) / 86400000) + 1;
                 var blank = Math.max(0, spanDays - total);
                 bigStatBlank.textContent = blank;
-                bigStatBlankUnit.textContent = '天 · 自 ' + fp[0] + '.' + (+fp[1]) + '.' + (+fp[2]) + ' 起';
             } else {
                 bigStatBlank.textContent = 0;
-                bigStatBlankUnit.textContent = '天';
+            }
+            bigStatBlankUnit.textContent = '天';
+
+            // Section subtitle — explain monthly vs cumulative once
+            var subEl = document.getElementById('statsSubtitle');
+            if (subEl) {
+                if (firstKey) {
+                    var sp = firstKey.split('-');
+                    subEl.textContent = '累计数据自 ' + sp[0] + '.' + (+sp[1]) + '.' + (+sp[2]) +
+                        ' 起；本月常做的运动会随月份切换同步更新。';
+                } else {
+                    subEl.textContent = '累计数据自首次训练起；本月常做的运动会随月份切换同步更新。';
+                }
             }
 
             // Top exercises (this month)
