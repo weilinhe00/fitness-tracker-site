@@ -14,14 +14,14 @@
 
         <nav class="main-nav">
             <div class="nav-links" id="navLinks">
-                <a href="#calendar" class="active">Calendar</a>
-                <a href="#progress">Progress</a>
-                <a href="#baseline">Baseline</a>
+                <a href="#calendar" class="active">日历</a>
+                <a href="#progress">效果对比</a>
+                <a href="#baseline">起始效果</a>
             </div>
             <div class="nav-links popup" id="navLinksPopup">
-                <a href="#calendar" class="active">Calendar</a>
-                <a href="#progress">Progress</a>
-                <a href="#baseline">Baseline</a>
+                <a href="#calendar" class="active">日历</a>
+                <a href="#progress">效果对比</a>
+                <a href="#baseline">起始效果</a>
             </div>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
                 <span class="hamburger"><span></span><span></span><span></span></span>
@@ -35,25 +35,25 @@
                 </div>
                 <h1 class="name-en">Fitness Diary</h1>
                 <div class="name-cn">每日健身记录</div>
-                <p class="role">Daily training, <span class="role-accent">weekly progress</span></p>
+                <p class="role">记录每日训练，<span class="role-accent">追踪每周变化</span></p>
 
                 <div class="contacts">
-                    <span class="loc" title="Streak">
+                    <span class="loc" title="坚持">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
                     </span>
-                    <span class="loc" title="Calendar">
+                    <span class="loc" title="日历">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     </span>
-                    <span class="loc" title="Photos">
+                    <span class="loc" title="效果对比">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                     </span>
                 </div>
             </header>
 
             <div class="year-filter" id="yearFilter">
-                <button type="button" data-section="calendar" class="active">日历 Calendar</button>
-                <button type="button" data-section="progress">效果对比 Progress</button>
-                <button type="button" data-section="baseline">起始效果 Baseline</button>
+                <button type="button" data-section="calendar" class="active">日历</button>
+                <button type="button" data-section="progress">效果对比</button>
+                <button type="button" data-section="baseline">起始效果</button>
             </div>
 
             <div class="stats-mini" id="statsMini">
@@ -90,6 +90,13 @@
 
         <main class="content">
 
+            <section class="hero-quote">
+                <blockquote>
+                    所有摧毁身体的快乐<br>
+                    都无法超过塑造身体带来的快乐。
+                </blockquote>
+            </section>
+
             <section id="calendar">
                 <div class="cal-head">
                     <div>
@@ -111,7 +118,7 @@
                     </div>
 
                     <div class="cal-weekdays">
-                        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+                        <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
                     </div>
 
                     <div class="cal-grid" id="calGrid"></div>
@@ -143,7 +150,7 @@
                         <div class="baseline-hint">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                             <span>点击查看起始效果</span>
-                            <small>Tap to reveal initial photos</small>
+                            <small>看看出发时的样子</small>
                         </div>
                     </button>
                     <div class="baseline-reveal" id="baselineReveal" hidden>
@@ -153,7 +160,7 @@
                                     <span class="slot-plus">＋</span>
                                 </div>
                                 <div class="baseline-meta">
-                                    <span class="baseline-label">正面 Front</span>
+                                    <span class="baseline-label">正面</span>
                                     <input type="file" accept="image/*" hidden>
                                     <button type="button" class="baseline-upload">上传</button>
                                 </div>
@@ -163,7 +170,7 @@
                                     <span class="slot-plus">＋</span>
                                 </div>
                                 <div class="baseline-meta">
-                                    <span class="baseline-label">侧面 Side</span>
+                                    <span class="baseline-label">侧面</span>
                                     <input type="file" accept="image/*" hidden>
                                     <button type="button" class="baseline-upload">上传</button>
                                 </div>
@@ -173,7 +180,7 @@
                                     <span class="slot-plus">＋</span>
                                 </div>
                                 <div class="baseline-meta">
-                                    <span class="baseline-label">背面 Back</span>
+                                    <span class="baseline-label">背面</span>
                                     <input type="file" accept="image/*" hidden>
                                     <button type="button" class="baseline-upload">上传</button>
                                 </div>
@@ -202,7 +209,7 @@
         <div class="modal-card" role="dialog" aria-labelledby="dayModalTitle">
             <header class="modal-head">
                 <div>
-                    <p class="eyebrow" id="dayModalEyebrow">Today</p>
+                    <p class="eyebrow" id="dayModalEyebrow">今日</p>
                     <h3 id="dayModalTitle">5 月 10 日 · 周日</h3>
                 </div>
                 <button type="button" class="modal-close" data-close aria-label="Close">×</button>
@@ -370,6 +377,7 @@
         // ---------- Calendar ----------
         var WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六'];
         var MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var MONTH_CN = ['1','2','3','4','5','6','7','8','9','10','11','12'];
 
         function dateKey(y, m, d) {
             return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
@@ -388,7 +396,7 @@
         var calTitle = document.getElementById('calTitle');
 
         function renderCalendar() {
-            calTitle.textContent = MONTH_EN[view.m] + ' ' + view.y;
+            calTitle.textContent = view.y + ' 年 ' + MONTH_CN[view.m] + ' 月';
             calGrid.innerHTML = '';
             var first = new Date(view.y, view.m, 1);
             var firstDow = (first.getDay() + 6) % 7; // Mon=0
@@ -489,7 +497,7 @@
             dayTitle.textContent = (d.getMonth()+1) + ' 月 ' + d.getDate() + ' 日 · ' + WEEK_CN[d.getDay()];
             var today = new Date();
             var isToday = d.toDateString() === today.toDateString();
-            dayEyebrow.textContent = isToday ? 'Today · ' + key : key;
+            dayEyebrow.textContent = isToday ? '今日 · ' + key : key;
             renderTags();
             exerciseInput.value = '';
             dayModal.hidden = false;
@@ -615,7 +623,7 @@
                 card.innerHTML =
                     '<div class="week-card-head">' +
                         '<div>' +
-                            '<p class="eyebrow">Week · ' + escapeHtml(w.label || '') + '</p>' +
+                            '<p class="eyebrow">第 ' + escapeHtml(w.label || '') + ' 周</p>' +
                             '<h3>' + escapeHtml(w.date || '未填日期') + '</h3>' +
                             '<p class="week-note">' + escapeHtml(w.note || '点编辑添加备注') + '</p>' +
                         '</div>' +
@@ -625,9 +633,9 @@
                         '</div>' +
                     '</div>' +
                     '<div class="week-photo-row">' +
-                        photoSlotHtml(w.id, 'front', '正面 Front', w.photos.front) +
-                        photoSlotHtml(w.id, 'side',  '侧面 Side',  w.photos.side) +
-                        photoSlotHtml(w.id, 'back',  '背面 Back',  w.photos.back) +
+                        photoSlotHtml(w.id, 'front', '正面', w.photos.front) +
+                        photoSlotHtml(w.id, 'side',  '侧面',  w.photos.side) +
+                        photoSlotHtml(w.id, 'back',  '背面',  w.photos.back) +
                     '</div>';
                 weeksList.appendChild(card);
             });
@@ -648,7 +656,7 @@
         }
 
         document.getElementById('addWeek').addEventListener('click', function() {
-            var label = prompt('给这一周一个标签（例如 Week 19）', 'Week ' + getISOWeek(new Date()));
+            var label = prompt('给这一周编号（例如 19）', String(getISOWeek(new Date())));
             if (label === null) return;
             var date = prompt('日期（例如 2026-05-10）', new Date().toISOString().slice(0,10));
             if (date === null) return;
