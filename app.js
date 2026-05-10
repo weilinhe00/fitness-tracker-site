@@ -8,7 +8,7 @@ const PLAN_ITEMS = [
     max: 40,
     targetReps: 30,
     targetSets: 3,
-    color: "#007aff",
+    color: "#111111",
   },
   {
     id: "lunge",
@@ -17,7 +17,7 @@ const PLAN_ITEMS = [
     max: 50,
     targetReps: 30,
     targetSets: 3,
-    color: "#ff9500",
+    color: "#2b2b2b",
   },
   {
     id: "dumbbell-upright-row",
@@ -26,7 +26,7 @@ const PLAN_ITEMS = [
     max: 60,
     targetReps: 40,
     targetSets: 3,
-    color: "#34c759",
+    color: "#444444",
   },
   {
     id: "crunch",
@@ -35,7 +35,7 @@ const PLAN_ITEMS = [
     max: 40,
     targetReps: 30,
     targetSets: 3,
-    color: "#af52de",
+    color: "#666666",
   },
   {
     id: "cable-machine",
@@ -44,19 +44,19 @@ const PLAN_ITEMS = [
     max: 30,
     targetReps: 30,
     targetSets: 1,
-    color: "#ff3b30",
+    color: "#808080",
   },
   {
     id: "run",
     name: "跑步",
     kind: "cardio",
-    color: "#5856d6",
+    color: "#333333",
   },
   {
     id: "bike",
     name: "骑单车",
     kind: "cardio",
-    color: "#00c7be",
+    color: "#5f5f5f",
   },
 ];
 
