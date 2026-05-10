@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -53,6 +56,11 @@
                 <button type="button" data-section="calendar" class="active">日历</button>
                 <button type="button" data-section="stats">统计</button>
                 <button type="button" data-section="compare">效果对比</button>
+            </div>
+
+            <div class="sync-status" id="syncStatus">
+                <button type="button" class="data-btn" id="authBtn">登录同步</button>
+                <span class="sync-state" id="syncState">只读模式</span>
             </div>
 
         </aside>
@@ -310,36 +318,78 @@
             });
         })();
 
+        // ---------- Firebase init ----------
+        var firebaseConfig = {
+            apiKey: "AIzaSyC9fthWzbCyaV_Lrv2Mg58Lkb2YQMGj41A",
+            authDomain: "fitness-diary-00.firebaseapp.com",
+            projectId: "fitness-diary-00",
+            storageBucket: "fitness-diary-00.firebasestorage.app",
+            messagingSenderId: "188104053638",
+            appId: "1:188104053638:web:ea9e36ea1531942aa9d207"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var fbAuth = firebase.auth();
+        var fbDb = firebase.firestore();
+        var diaryRef = fbDb.collection('diary').doc('main');
+        var currentUser = null;
+        var docOwnerUid = null;        // owner of the diary doc (read from Firestore)
+        var firestoreLoaded = false;   // first snapshot has arrived
+
         // ---------- Storage ----------
         var STORE_KEY = 'fitness-diary-v1';
-        function loadStore() {
+        function loadLocal() {
             try {
                 var raw = localStorage.getItem(STORE_KEY);
-                if (!raw) return { days: {}, weeks: [], baseline: { front: null, side: null, back: null, date: null } };
+                if (!raw) return { days: {} };
                 var data = JSON.parse(raw);
                 if (!data.days) data.days = {};
-                if (!data.weeks) data.weeks = [];
-                if (!data.baseline) data.baseline = { front: null, side: null, back: null, date: null };
                 return data;
             } catch (e) {
-                return { days: {}, weeks: [], baseline: { front: null, side: null, back: null, date: null } };
+                return { days: {} };
             }
         }
+        function writeLocal() {
+            try { localStorage.setItem(STORE_KEY, JSON.stringify({ days: store.days })); }
+            catch (e) {}
+        }
+
+        function isOwner() {
+            if (!currentUser) return false;
+            // If no doc exists yet, the first signed-in user becomes owner.
+            // Otherwise only the recorded owner can write.
+            if (!docOwnerUid) return true;
+            return docOwnerUid === currentUser.uid;
+        }
+
         function saveStore(silent) {
-            try {
-                localStorage.setItem(STORE_KEY, JSON.stringify(store));
-                if (!silent) toast('已保存到浏览器');
+            // Always cache locally
+            writeLocal();
+
+            if (!currentUser) {
+                if (!silent) toast('未登录 — 仅保存到本地，不会同步');
                 return true;
-            } catch (e) {
-                if (e && (e.name === 'QuotaExceededError' || /quota/i.test(e.message))) {
-                    toast('浏览器空间已满 — 请删除部分照片或导出备份后清理', true);
-                } else {
-                    toast('保存失败：' + (e.message || e), true);
-                }
-                return false;
             }
+            if (!isOwner()) {
+                if (!silent) toast('当前账号不是管理员 — 仅本地保存', true);
+                return true;
+            }
+            // Owner: push to Firestore
+            var payload = {
+                days: store.days,
+                ownerUid: docOwnerUid || currentUser.uid,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            diaryRef.set(payload, { merge: true })
+                .then(function() {
+                    if (!docOwnerUid) docOwnerUid = currentUser.uid;
+                    if (!silent) toast('已同步到云端');
+                })
+                .catch(function(err) {
+                    toast('云端同步失败：' + (err.message || err.code), true);
+                });
+            return true;
         }
-        var store = loadStore();
+        var store = loadLocal();
 
         // ---------- Toast ----------
         var toastEl = document.getElementById('toast');
@@ -362,6 +412,65 @@
             }, isError ? 4000 : 1800);
         }
 
+        // ---------- Auth UI ----------
+        var authBtn = document.getElementById('authBtn');
+        var syncStateEl = document.getElementById('syncState');
+
+        function updateAuthUI() {
+            if (currentUser) {
+                authBtn.textContent = '登出';
+                if (isOwner()) {
+                    syncStateEl.textContent = '管理员 · ' + (currentUser.displayName || currentUser.email || '已登录');
+                    syncStateEl.classList.add('is-owner');
+                    syncStateEl.classList.remove('is-readonly');
+                } else {
+                    syncStateEl.textContent = '只读 · 非管理员账号';
+                    syncStateEl.classList.remove('is-owner');
+                    syncStateEl.classList.add('is-readonly');
+                }
+            } else {
+                authBtn.textContent = '管理员登录';
+                syncStateEl.textContent = firestoreLoaded ? '只读模式 · 实时同步' : '只读模式';
+                syncStateEl.classList.remove('is-owner', 'is-readonly');
+            }
+        }
+
+        authBtn.addEventListener('click', function() {
+            if (currentUser) {
+                fbAuth.signOut();
+            } else {
+                var provider = new firebase.auth.GoogleAuthProvider();
+                fbAuth.signInWithPopup(provider).catch(function(err) {
+                    toast('登录失败：' + (err.message || err.code), true);
+                });
+            }
+        });
+
+        fbAuth.onAuthStateChanged(function(user) {
+            currentUser = user;
+            updateAuthUI();
+        });
+
+        // ---------- Firestore real-time sync ----------
+        diaryRef.onSnapshot(function(snap) {
+            firestoreLoaded = true;
+            if (snap.exists) {
+                var data = snap.data();
+                if (data) {
+                    if (data.ownerUid) docOwnerUid = data.ownerUid;
+                    if (data.days) {
+                        store.days = data.days;
+                        writeLocal();
+                        if (typeof renderCalendar === 'function') renderCalendar();
+                        if (typeof renderVisualStats === 'function') renderVisualStats();
+                    }
+                }
+            }
+            updateAuthUI();
+        }, function(err) {
+            console.error('Firestore listen error:', err);
+            toast('云端读取失败 — 使用本地数据', true);
+        });
 
         // ---------- Calendar ----------
         var WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六'];

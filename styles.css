@@ -223,6 +223,32 @@ nav.main-nav {
 .year-filter button:hover { color: var(--text); }
 .year-filter button.active { color: var(--text); font-weight: 500; }
 
+/* Sync / auth status (sidebar) */
+.sync-status {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.sync-status .data-btn { width: 100%; justify-content: center; }
+.sync-state {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+    word-break: break-word;
+}
+.sync-state.is-owner {
+    color: var(--text);
+    font-weight: 500;
+}
+.sync-state.is-owner::before {
+    content: "● ";
+    color: var(--text);
+}
+.sync-state.is-readonly { color: var(--text-tertiary); }
+
 /* Backup section (bottom of page) */
 .backup-section {
     margin-top: 5rem;
