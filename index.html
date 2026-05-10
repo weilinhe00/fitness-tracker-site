@@ -1,393 +1,731 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小何的每日健身计划</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Diary · Weilin He</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="#top">
-          <span class="brand-mark"><span></span><span></span><span></span></span>
-          <span>
-            <strong>小何的每日健身计划</strong>
-            <small>Daily Routine · v1</small>
-          </span>
-        </a>
-        <div class="top-actions">
-          <button class="ghost-button" type="button">编辑计划</button>
-          <button class="ghost-button" type="button">导出</button>
-        </div>
-      </header>
+</head>
+<body>
+    <div class="container">
 
-      <main id="top">
-        <section class="hero-panel-v2">
-          <div class="hero-meta">
-            <time>5 月 10 日 · 周日</time>
-            <span class="dot">·</span>
-            <span>第 19 周 · 第 3 天</span>
-          </div>
-
-          <h1>所有摧毁身体的快乐<br>都无法超过塑造身体的快乐。</h1>
-
-          <div class="hero-strip">
-            <div class="strip-cell">
-              <span class="strip-label">Today</span>
-              <div class="strip-value">
-                <strong>3</strong><em>/ 5</em>
-              </div>
-              <div class="strip-bar"><span style="width:60%"></span></div>
+        <nav class="main-nav">
+            <div class="nav-links" id="navLinks">
+                <a href="#calendar" class="active">Calendar</a>
+                <a href="#progress">Progress</a>
+                <a href="#baseline">Baseline</a>
             </div>
-            <div class="strip-cell">
-              <span class="strip-label">Streak</span>
-              <div class="strip-value">
-                <strong>23</strong><em>天</em>
-              </div>
-              <span class="strip-sub">本月连续</span>
+            <div class="nav-links popup" id="navLinksPopup">
+                <a href="#calendar" class="active">Calendar</a>
+                <a href="#progress">Progress</a>
+                <a href="#baseline">Baseline</a>
             </div>
-            <div class="strip-cell">
-              <span class="strip-label">This Week</span>
-              <div class="strip-value">
-                <strong>14</strong><em>/ 25</em>
-              </div>
-              <span class="strip-sub">第 19 周完成项</span>
-            </div>
-            <div class="strip-cell">
-              <span class="strip-label">Photo</span>
-              <div class="strip-value strip-warn">
-                <strong>0</strong><em>/ 3 张</em>
-              </div>
-              <span class="strip-sub">本周还没记录</span>
-            </div>
-          </div>
-        </section>
-
-        <section class="checkin-section">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Today · 5 / 10</p>
-              <h2>今日训练</h2>
-            </div>
-            <span class="completion-msg">已完成 <strong>3</strong> 项 · 还差 2 项</span>
-          </div>
-
-          <div class="checkin-grid">
-            <button class="checkin-card is-done" type="button">
-              <span class="checkin-num">01</span>
-              <span class="checkin-status"><span>✓</span></span>
-              <h3>波比跳</h3>
-              <div class="checkin-targets">
-                <div><strong>30</strong> × 3 组</div>
-                <div class="checkin-limit">极限 40</div>
-              </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+                <span class="hamburger"><span></span><span></span><span></span></span>
             </button>
+        </nav>
 
-            <button class="checkin-card is-done" type="button">
-              <span class="checkin-num">02</span>
-              <span class="checkin-status"><span>✓</span></span>
-              <h3>箭步蹲</h3>
-              <div class="checkin-targets">
-                <div><strong>30</strong> × 3 组</div>
-                <div class="checkin-limit">极限 50</div>
-              </div>
-            </button>
-
-            <button class="checkin-card is-done" type="button">
-              <span class="checkin-num">03</span>
-              <span class="checkin-status"><span>✓</span></span>
-              <h3>4公斤哑铃提拉</h3>
-              <div class="checkin-targets">
-                <div><strong>40</strong> × 3 组</div>
-                <div class="checkin-limit">极限 60</div>
-              </div>
-            </button>
-
-            <button class="checkin-card" type="button">
-              <span class="checkin-num">04</span>
-              <span class="checkin-status"><span>+</span></span>
-              <h3>卷腹</h3>
-              <div class="checkin-targets">
-                <div><strong>30</strong> × 3 组</div>
-                <div class="checkin-limit">极限 40</div>
-              </div>
-            </button>
-
-            <button class="checkin-card" type="button">
-              <span class="checkin-num">05</span>
-              <span class="checkin-status"><span>+</span></span>
-              <h3>龙门架</h3>
-              <div class="checkin-targets">
-                <div class="checkin-limit big">极限 30</div>
-              </div>
-            </button>
-          </div>
-
-          <div class="optional-row">
-            <span class="opt-label">额外加入</span>
-            <button class="opt-card" type="button">
-              <span class="opt-icon">+</span>
-              <span>跑步</span>
-            </button>
-            <button class="opt-card" type="button">
-              <span class="opt-icon">+</span>
-              <span>骑单车</span>
-            </button>
-          </div>
-
-          <div class="checkin-actions">
-            <button class="ghost-button" type="button">明天再说</button>
-            <button class="primary-button" type="button">保存今日打卡</button>
-          </div>
-        </section>
-
-        <section class="weekly-section">
-          <div class="weekly-card">
-            <div class="weekly-info">
-              <p class="eyebrow">Weekly Snapshot · Week 19</p>
-              <h3>第 19 周 效果记录</h3>
-              <p class="weekly-status">本周还没传效果照 · 与第 18 周对比观察变化</p>
-            </div>
-            <div class="photo-slots">
-              <button class="photo-slot empty" type="button">
-                <span class="slot-icon">＋</span>
-                <span class="slot-label">正面</span>
-              </button>
-              <button class="photo-slot empty" type="button">
-                <span class="slot-icon">＋</span>
-                <span class="slot-label">侧面</span>
-              </button>
-              <button class="photo-slot empty" type="button">
-                <span class="slot-icon">＋</span>
-                <span class="slot-label">背面</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section class="dashboard">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Dashboard</p>
-              <h2>训练可视化</h2>
-            </div>
-            <label class="month-filter">
-              <span>月份</span>
-              <input type="month" value="2026-05">
-            </label>
-          </div>
-
-          <div class="metric-grid">
-            <div class="metric-card">
-              <span>本月训练天数</span>
-              <strong>23 天</strong>
-              <small>out of 31 days</small>
-            </div>
-            <div class="metric-card">
-              <span>本月项目完成</span>
-              <strong>147 次</strong>
-              <small>across 5 categories</small>
-            </div>
-            <div class="metric-card">
-              <span>极限挑战次数</span>
-              <strong>9 次</strong>
-              <small>this month</small>
-            </div>
-            <div class="metric-card">
-              <span>平均完成率</span>
-              <strong>73%</strong>
-              <small>per active day</small>
-            </div>
-          </div>
-
-          <div class="visual-grid">
-            <article class="visual-panel">
-              <div class="panel-heading">
-                <h3>近 14 天每日完成</h3>
-                <span>项 / 5</span>
-              </div>
-              <div class="bar-chart">
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:40%"></div></div><div class="bar-label">28</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:0%"></div></div><div class="bar-label">29</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:60%"></div></div><div class="bar-label">30</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">1</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:50%"></div></div><div class="bar-label">2</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:0%"></div></div><div class="bar-label">3</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:100%"></div></div><div class="bar-label">4</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:60%"></div></div><div class="bar-label">5</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">6</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:40%"></div></div><div class="bar-label">7</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">8</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:0%"></div></div><div class="bar-label">9</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">10</div></div>
-                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:60%"></div></div><div class="bar-label">11</div></div>
-              </div>
-            </article>
-
-            <article class="visual-panel">
-              <div class="panel-heading">
-                <h3>本月坚持热力</h3>
-                <span>23 天</span>
-              </div>
-              <div class="heatmap">
-                <div class="heat-label">M</div><div class="heat-label">T</div><div class="heat-label">W</div><div class="heat-label">T</div><div class="heat-label">F</div><div class="heat-label">S</div><div class="heat-label">S</div>
-                <div class="heat-cell level-2">1</div><div class="heat-cell level-1">2</div><div class="heat-cell level-3">3</div><div class="heat-cell">4</div><div class="heat-cell level-2">5</div><div class="heat-cell level-3">6</div><div class="heat-cell level-1">7</div>
-                <div class="heat-cell level-3">8</div><div class="heat-cell">9</div><div class="heat-cell level-2">10</div><div class="heat-cell level-1">11</div><div class="heat-cell level-3">12</div><div class="heat-cell level-3">13</div><div class="heat-cell level-2">14</div>
-                <div class="heat-cell level-1">15</div><div class="heat-cell level-2">16</div><div class="heat-cell">17</div><div class="heat-cell level-3">18</div><div class="heat-cell level-2">19</div><div class="heat-cell level-1">20</div><div class="heat-cell level-3">21</div>
-                <div class="heat-cell level-2">22</div><div class="heat-cell level-3">23</div><div class="heat-cell level-1">24</div><div class="heat-cell level-2">25</div><div class="heat-cell">26</div><div class="heat-cell level-3">27</div><div class="heat-cell level-2">28</div>
-                <div class="heat-cell level-1">29</div><div class="heat-cell level-3">30</div><div class="heat-cell is-today level-2">31</div>
-              </div>
-            </article>
-
-            <article class="visual-panel progress-panel">
-              <div class="panel-heading">
-                <h3>各项目本月完成度</h3>
-                <span>5 项</span>
-              </div>
-              <div class="target-progress-list">
-                <div class="target-row">
-                  <div><strong>波比跳</strong><span>20 / 30 天</span></div>
-                  <div class="target-track"><span style="width:67%"></span></div>
+        <aside class="sidebar">
+            <header class="header">
+                <div class="avatar">
+                    <img src="" alt="Weilin He" onerror="this.style.display='none'">
                 </div>
-                <div class="target-row">
-                  <div><strong>箭步蹲</strong><span>18 / 30 天</span></div>
-                  <div class="target-track"><span style="width:60%"></span></div>
-                </div>
-                <div class="target-row">
-                  <div><strong>哑铃提拉</strong><span>15 / 30 天</span></div>
-                  <div class="target-track"><span style="width:50%"></span></div>
-                </div>
-                <div class="target-row">
-                  <div><strong>卷腹</strong><span>23 / 30 天</span></div>
-                  <div class="target-track"><span style="width:77%"></span></div>
-                </div>
-                <div class="target-row">
-                  <div><strong>龙门架</strong><span>12 / 30 天</span></div>
-                  <div class="target-track"><span style="width:40%"></span></div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
+                <h1 class="name-en">Fitness Diary</h1>
+                <div class="name-cn">每日健身记录</div>
+                <p class="role">Daily training, <span class="role-accent">weekly progress</span></p>
 
-        <section class="history-section">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">History</p>
-              <h2>训练记录</h2>
-            </div>
-            <label class="search-box">
-              <span>搜索</span>
-              <input type="search" placeholder="项目、日期">
-            </label>
-          </div>
+                <div class="contacts">
+                    <span class="loc" title="Streak">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    </span>
+                    <span class="loc" title="Calendar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </span>
+                    <span class="loc" title="Photos">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </span>
+                </div>
+            </header>
 
-          <article class="week-block">
-            <div class="week-header">
-              <div class="week-info">
-                <p class="eyebrow">Week 19 · Current</p>
-                <h3>5 月 4 日 — 5 月 10 日</h3>
-                <p class="week-stats">完成 <strong>14</strong> / 25 项 · <strong>5</strong> 天有训练</p>
-              </div>
-              <div class="week-photos">
-                <div class="mini-photo placeholder"><span>正面</span></div>
-                <div class="mini-photo placeholder"><span>侧面</span></div>
-                <div class="mini-photo placeholder"><span>背面</span></div>
-              </div>
+            <div class="year-filter" id="yearFilter">
+                <button type="button" data-section="calendar" class="active">日历 Calendar</button>
+                <button type="button" data-section="progress">效果对比 Progress</button>
+                <button type="button" data-section="baseline">起始效果 Baseline</button>
             </div>
-            <div class="day-list">
-              <div class="day-row">
-                <time><strong>10</strong><span>周日</span></time>
-                <div class="day-tags">
-                  <span class="tag-done">波比跳</span>
-                  <span class="tag-done">箭步蹲</span>
-                  <span class="tag-done">哑铃提拉</span>
-                </div>
-                <span class="day-score">3 / 5</span>
-              </div>
-              <div class="day-row">
-                <time><strong>09</strong><span>周六</span></time>
-                <div class="day-tags">
-                  <span class="tag-rest">休息</span>
-                </div>
-                <span class="day-score">—</span>
-              </div>
-              <div class="day-row">
-                <time><strong>08</strong><span>周五</span></time>
-                <div class="day-tags">
-                  <span class="tag-done">波比跳</span>
-                  <span class="tag-done">卷腹</span>
-                  <span class="tag-done">龙门架</span>
-                  <span class="tag-done">跑步 5km</span>
-                </div>
-                <span class="day-score">4 / 5</span>
-              </div>
-              <div class="day-row">
-                <time><strong>07</strong><span>周四</span></time>
-                <div class="day-tags">
-                  <span class="tag-done">箭步蹲</span>
-                  <span class="tag-done">哑铃提拉</span>
-                  <span class="tag-done">卷腹</span>
-                </div>
-                <span class="day-score">3 / 5</span>
-              </div>
-            </div>
-          </article>
 
-          <article class="week-block">
-            <div class="week-header">
-              <div class="week-info">
-                <p class="eyebrow">Week 18</p>
-                <h3>4 月 27 日 — 5 月 3 日</h3>
-                <p class="week-stats">完成 <strong>22</strong> / 25 项 · <strong>6</strong> 天有训练</p>
-              </div>
-              <div class="week-photos">
-                <div class="mini-photo filled"><span>正面</span></div>
-                <div class="mini-photo filled"><span>侧面</span></div>
-                <div class="mini-photo filled"><span>背面</span></div>
-              </div>
-            </div>
-            <div class="day-list">
-              <div class="day-row">
-                <time><strong>03</strong><span>周日</span></time>
-                <div class="day-tags">
-                  <span class="tag-done">波比跳</span>
-                  <span class="tag-done">箭步蹲</span>
-                  <span class="tag-done">哑铃提拉</span>
-                  <span class="tag-done">卷腹</span>
-                  <span class="tag-done">龙门架</span>
+            <div class="stats-mini" id="statsMini">
+                <div class="stat-row">
+                    <span class="stat-label">本月训练</span>
+                    <span class="stat-value" id="statMonth">0 天</span>
                 </div>
-                <span class="day-score perfect">5 / 5</span>
-              </div>
-              <div class="day-row">
-                <time><strong>02</strong><span>周六</span></time>
-                <div class="day-tags">
-                  <span class="tag-done">波比跳</span>
-                  <span class="tag-done">卷腹</span>
-                  <span class="tag-done">骑单车 12km</span>
+                <div class="stat-row">
+                    <span class="stat-label">连续天数</span>
+                    <span class="stat-value" id="statStreak">0 天</span>
                 </div>
-                <span class="day-score">3 / 5</span>
-              </div>
+                <div class="stat-row">
+                    <span class="stat-label">总记录</span>
+                    <span class="stat-value" id="statTotal">0 天</span>
+                </div>
             </div>
-          </article>
+        </aside>
 
-          <article class="week-block baseline-block">
-            <div class="week-header">
-              <div class="week-info">
-                <p class="eyebrow">Initial · 起始记录</p>
-                <h3>起始效果图</h3>
-                <p class="week-stats">4 月 27 日 上传 · 用作所有后续对比的基准</p>
-              </div>
-              <div class="week-photos">
-                <div class="mini-photo filled baseline"><span>正面</span></div>
-                <div class="mini-photo filled baseline"><span>侧面</span></div>
-                <div class="mini-photo filled baseline"><span>背面</span></div>
-              </div>
-            </div>
-          </article>
-        </section>
-      </main>
+        <main class="content">
+
+            <section id="calendar">
+                <div class="cal-head">
+                    <div>
+                        <h2>训练日历</h2>
+                        <p class="subtitle">点击任意日期记录今天的训练 — 数据自动保存在本地浏览器。</p>
+                    </div>
+                </div>
+
+                <div class="calendar-card">
+                    <div class="cal-toolbar">
+                        <button type="button" class="cal-nav" id="prevMonth" aria-label="Previous month">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <div class="cal-title" id="calTitle">May 2026</div>
+                        <button type="button" class="cal-nav" id="nextMonth" aria-label="Next month">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                        <button type="button" class="cal-today" id="goToday">今天</button>
+                    </div>
+
+                    <div class="cal-weekdays">
+                        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+                    </div>
+
+                    <div class="cal-grid" id="calGrid"></div>
+                </div>
+            </section>
+
+            <section id="progress">
+                <div class="cal-head">
+                    <div>
+                        <h2>每周效果对比</h2>
+                        <p class="subtitle">每周上传一组照片 — 与上一周或起始效果对比观察变化。</p>
+                    </div>
+                    <button type="button" class="primary-btn" id="addWeek">+ 添加本周</button>
+                </div>
+
+                <div class="weeks-list" id="weeksList"></div>
+            </section>
+
+            <section id="baseline">
+                <div class="cal-head">
+                    <div>
+                        <h2>起始效果</h2>
+                        <p class="subtitle">最初的样子 — 点击查看大图。</p>
+                    </div>
+                </div>
+
+                <div class="baseline-card" id="baselineCard">
+                    <button type="button" class="baseline-cover" id="baselineCover">
+                        <div class="baseline-hint">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span>点击查看起始效果</span>
+                            <small>Tap to reveal initial photos</small>
+                        </div>
+                    </button>
+                    <div class="baseline-reveal" id="baselineReveal" hidden>
+                        <div class="baseline-grid">
+                            <div class="baseline-slot" data-slot="front">
+                                <div class="baseline-img" data-empty="true">
+                                    <span class="slot-plus">＋</span>
+                                </div>
+                                <div class="baseline-meta">
+                                    <span class="baseline-label">正面 Front</span>
+                                    <input type="file" accept="image/*" hidden>
+                                    <button type="button" class="baseline-upload">上传</button>
+                                </div>
+                            </div>
+                            <div class="baseline-slot" data-slot="side">
+                                <div class="baseline-img" data-empty="true">
+                                    <span class="slot-plus">＋</span>
+                                </div>
+                                <div class="baseline-meta">
+                                    <span class="baseline-label">侧面 Side</span>
+                                    <input type="file" accept="image/*" hidden>
+                                    <button type="button" class="baseline-upload">上传</button>
+                                </div>
+                            </div>
+                            <div class="baseline-slot" data-slot="back">
+                                <div class="baseline-img" data-empty="true">
+                                    <span class="slot-plus">＋</span>
+                                </div>
+                                <div class="baseline-meta">
+                                    <span class="baseline-label">背面 Back</span>
+                                    <input type="file" accept="image/*" hidden>
+                                    <button type="button" class="baseline-upload">上传</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="baseline-foot">
+                            <label class="baseline-date-row">
+                                <span>记录日期</span>
+                                <input type="date" id="baselineDate">
+                            </label>
+                            <button type="button" class="ghost-btn" id="baselineHide">收起</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>&copy; 2026 Weilin He · Fitness Diary</footer>
+
     </div>
-  </body>
+
+    <!-- Day editor modal -->
+    <div class="modal" id="dayModal" hidden>
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-card" role="dialog" aria-labelledby="dayModalTitle">
+            <header class="modal-head">
+                <div>
+                    <p class="eyebrow" id="dayModalEyebrow">Today</p>
+                    <h3 id="dayModalTitle">5 月 10 日 · 周日</h3>
+                </div>
+                <button type="button" class="modal-close" data-close aria-label="Close">×</button>
+            </header>
+
+            <div class="modal-body">
+                <label class="field-label">今天做了什么运动？</label>
+                <div class="tag-input-row">
+                    <input type="text" id="exerciseInput" placeholder="例如：波比跳 30×3，跑步 5km" autocomplete="off">
+                    <button type="button" class="primary-btn" id="addExercise">添加</button>
+                </div>
+                <div class="exercise-tags" id="exerciseTags"></div>
+
+                <label class="field-label" style="margin-top:1.5rem;">备注（可选）</label>
+                <textarea id="dayNote" rows="3" placeholder="今日感受、强度、状态…"></textarea>
+
+                <div class="modal-quick">
+                    <span class="quick-label">快速添加</span>
+                    <button type="button" class="quick-chip" data-quick="波比跳">波比跳</button>
+                    <button type="button" class="quick-chip" data-quick="箭步蹲">箭步蹲</button>
+                    <button type="button" class="quick-chip" data-quick="哑铃提拉">哑铃提拉</button>
+                    <button type="button" class="quick-chip" data-quick="卷腹">卷腹</button>
+                    <button type="button" class="quick-chip" data-quick="龙门架">龙门架</button>
+                    <button type="button" class="quick-chip" data-quick="跑步">跑步</button>
+                    <button type="button" class="quick-chip" data-quick="骑单车">骑单车</button>
+                    <button type="button" class="quick-chip" data-quick="休息">休息</button>
+                </div>
+            </div>
+
+            <footer class="modal-foot">
+                <button type="button" class="ghost-btn" id="clearDay">清除当日</button>
+                <div class="foot-spacer"></div>
+                <button type="button" class="ghost-btn" data-close>取消</button>
+                <button type="button" class="primary-btn" id="saveDay">保存</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Image lightbox -->
+    <div class="lightbox" id="lightbox" hidden>
+        <div class="lightbox-backdrop" data-close></div>
+        <button type="button" class="lightbox-close" data-close aria-label="Close">×</button>
+        <img id="lightboxImg" src="" alt="">
+    </div>
+
+    <script>
+        // ---------- Mobile nav popup ----------
+        (function() {
+            var toggle = document.getElementById('navToggle');
+            var links = document.getElementById('navLinksPopup');
+            if (!toggle || !links) return;
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isOpen = links.classList.toggle('open');
+                toggle.classList.toggle('open', isOpen);
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+            document.addEventListener('click', function(e) {
+                if (!links.contains(e.target) && !toggle.contains(e.target)) {
+                    links.classList.remove('open');
+                    toggle.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
+
+        // ---------- Storage ----------
+        var STORE_KEY = 'fitness-diary-v1';
+        function loadStore() {
+            try {
+                var raw = localStorage.getItem(STORE_KEY);
+                if (!raw) return { days: {}, weeks: [], baseline: { front: null, side: null, back: null, date: null } };
+                var data = JSON.parse(raw);
+                if (!data.days) data.days = {};
+                if (!data.weeks) data.weeks = [];
+                if (!data.baseline) data.baseline = { front: null, side: null, back: null, date: null };
+                return data;
+            } catch (e) {
+                return { days: {}, weeks: [], baseline: { front: null, side: null, back: null, date: null } };
+            }
+        }
+        function saveStore() { localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
+        var store = loadStore();
+
+        // ---------- Calendar ----------
+        var WEEK_CN = ['周日','周一','周二','周三','周四','周五','周六'];
+        var MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+        function dateKey(y, m, d) {
+            return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+        }
+        function fromKey(key) {
+            var p = key.split('-');
+            return new Date(+p[0], +p[1]-1, +p[2]);
+        }
+
+        var view = (function() {
+            var today = new Date();
+            return { y: today.getFullYear(), m: today.getMonth() };
+        })();
+
+        var calGrid = document.getElementById('calGrid');
+        var calTitle = document.getElementById('calTitle');
+
+        function renderCalendar() {
+            calTitle.textContent = MONTH_EN[view.m] + ' ' + view.y;
+            calGrid.innerHTML = '';
+            var first = new Date(view.y, view.m, 1);
+            var firstDow = (first.getDay() + 6) % 7; // Mon=0
+            var daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
+            var prevDays = new Date(view.y, view.m, 0).getDate();
+            var today = new Date();
+            var todayKey = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+            // Leading
+            for (var i = 0; i < firstDow; i++) {
+                var d = prevDays - firstDow + 1 + i;
+                var cell = document.createElement('div');
+                cell.className = 'cal-cell muted';
+                cell.innerHTML = '<div class="cal-day">' + d + '</div>';
+                calGrid.appendChild(cell);
+            }
+
+            // Current month
+            for (var day = 1; day <= daysInMonth; day++) {
+                var key = dateKey(view.y, view.m, day);
+                var entry = store.days[key];
+                var cell = document.createElement('button');
+                cell.type = 'button';
+                cell.className = 'cal-cell';
+                if (key === todayKey) cell.classList.add('is-today');
+                if (entry && entry.exercises && entry.exercises.length) cell.classList.add('has-entry');
+                if (entry && entry.exercises && entry.exercises.indexOf('休息') >= 0) cell.classList.add('rest');
+                cell.dataset.key = key;
+
+                var html = '<div class="cal-day">' + day + '</div>';
+                if (entry && entry.exercises && entry.exercises.length) {
+                    html += '<div class="cal-tags">';
+                    var shown = entry.exercises.slice(0, 3);
+                    shown.forEach(function(t) {
+                        html += '<span class="cal-tag">' + escapeHtml(t) + '</span>';
+                    });
+                    if (entry.exercises.length > 3) {
+                        html += '<span class="cal-tag more">+' + (entry.exercises.length - 3) + '</span>';
+                    }
+                    html += '</div>';
+                } else {
+                    html += '<div class="cal-empty">—</div>';
+                }
+                cell.innerHTML = html;
+                cell.addEventListener('click', function() { openDay(this.dataset.key); });
+                calGrid.appendChild(cell);
+            }
+
+            // Trailing to fill 6 rows
+            var totalCells = firstDow + daysInMonth;
+            var trailing = (7 - (totalCells % 7)) % 7;
+            for (var t = 1; t <= trailing; t++) {
+                var cell = document.createElement('div');
+                cell.className = 'cal-cell muted';
+                cell.innerHTML = '<div class="cal-day">' + t + '</div>';
+                calGrid.appendChild(cell);
+            }
+
+            renderStats();
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, function(c) {
+                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+            });
+        }
+
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            view.m--; if (view.m < 0) { view.m = 11; view.y--; }
+            renderCalendar();
+        });
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            view.m++; if (view.m > 11) { view.m = 0; view.y++; }
+            renderCalendar();
+        });
+        document.getElementById('goToday').addEventListener('click', function() {
+            var t = new Date();
+            view.y = t.getFullYear(); view.m = t.getMonth();
+            renderCalendar();
+        });
+
+        // ---------- Day modal ----------
+        var dayModal = document.getElementById('dayModal');
+        var dayTitle = document.getElementById('dayModalTitle');
+        var dayEyebrow = document.getElementById('dayModalEyebrow');
+        var exerciseInput = document.getElementById('exerciseInput');
+        var exerciseTags = document.getElementById('exerciseTags');
+        var dayNote = document.getElementById('dayNote');
+        var currentKey = null;
+        var workingTags = [];
+
+        function openDay(key) {
+            currentKey = key;
+            var d = fromKey(key);
+            var entry = store.days[key] || { exercises: [], note: '' };
+            workingTags = entry.exercises.slice();
+            dayNote.value = entry.note || '';
+            dayTitle.textContent = (d.getMonth()+1) + ' 月 ' + d.getDate() + ' 日 · ' + WEEK_CN[d.getDay()];
+            var today = new Date();
+            var isToday = d.toDateString() === today.toDateString();
+            dayEyebrow.textContent = isToday ? 'Today · ' + key : key;
+            renderTags();
+            exerciseInput.value = '';
+            dayModal.hidden = false;
+            setTimeout(function() { exerciseInput.focus(); }, 50);
+        }
+        function closeDay() { dayModal.hidden = true; currentKey = null; }
+
+        function renderTags() {
+            exerciseTags.innerHTML = '';
+            if (!workingTags.length) {
+                exerciseTags.innerHTML = '<span class="tags-empty">还没有记录 — 输入内容或点下面的快捷按钮</span>';
+                return;
+            }
+            workingTags.forEach(function(t, i) {
+                var chip = document.createElement('span');
+                chip.className = 'ex-chip';
+                chip.innerHTML = escapeHtml(t) + '<button type="button" data-i="'+i+'" aria-label="remove">×</button>';
+                exerciseTags.appendChild(chip);
+            });
+        }
+
+        exerciseTags.addEventListener('click', function(e) {
+            var btn = e.target.closest('button[data-i]');
+            if (!btn) return;
+            workingTags.splice(+btn.dataset.i, 1);
+            renderTags();
+        });
+
+        function addExerciseFromInput() {
+            var v = exerciseInput.value.trim();
+            if (!v) return;
+            workingTags.push(v);
+            exerciseInput.value = '';
+            renderTags();
+        }
+        document.getElementById('addExercise').addEventListener('click', addExerciseFromInput);
+        exerciseInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); addExerciseFromInput(); }
+        });
+
+        document.querySelectorAll('.quick-chip').forEach(function(b) {
+            b.addEventListener('click', function() {
+                workingTags.push(this.dataset.quick);
+                renderTags();
+            });
+        });
+
+        document.getElementById('saveDay').addEventListener('click', function() {
+            if (!currentKey) return;
+            if (!workingTags.length && !dayNote.value.trim()) {
+                delete store.days[currentKey];
+            } else {
+                store.days[currentKey] = { exercises: workingTags.slice(), note: dayNote.value.trim() };
+            }
+            saveStore();
+            renderCalendar();
+            closeDay();
+        });
+
+        document.getElementById('clearDay').addEventListener('click', function() {
+            if (!currentKey) return;
+            workingTags = [];
+            dayNote.value = '';
+            renderTags();
+        });
+
+        dayModal.addEventListener('click', function(e) {
+            if (e.target.matches('[data-close]')) closeDay();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (!dayModal.hidden) closeDay();
+                if (!lightbox.hidden) closeLightbox();
+            }
+        });
+
+        // ---------- Stats ----------
+        function renderStats() {
+            var monthPrefix = view.y + '-' + String(view.m+1).padStart(2,'0');
+            var monthCount = 0;
+            Object.keys(store.days).forEach(function(k) {
+                if (k.indexOf(monthPrefix) === 0) {
+                    var e = store.days[k];
+                    if (e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) monthCount++;
+                }
+            });
+            document.getElementById('statMonth').textContent = monthCount + ' 天';
+
+            // Streak (back from today)
+            var streak = 0;
+            var d = new Date();
+            for (var i = 0; i < 365; i++) {
+                var k = dateKey(d.getFullYear(), d.getMonth(), d.getDate());
+                var e = store.days[k];
+                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) streak++;
+                else break;
+                d.setDate(d.getDate() - 1);
+            }
+            document.getElementById('statStreak').textContent = streak + ' 天';
+
+            var total = 0;
+            Object.keys(store.days).forEach(function(k) {
+                var e = store.days[k];
+                if (e.exercises && e.exercises.length) total++;
+            });
+            document.getElementById('statTotal').textContent = total + ' 天';
+        }
+
+        // ---------- Weekly progress ----------
+        var weeksList = document.getElementById('weeksList');
+
+        function renderWeeks() {
+            weeksList.innerHTML = '';
+            if (!store.weeks.length) {
+                weeksList.innerHTML = '<div class="weeks-empty">还没有效果对比 — 点上方“+ 添加本周”开始记录</div>';
+                return;
+            }
+            // sort newest first
+            var sorted = store.weeks.slice().sort(function(a,b) { return (b.date || '').localeCompare(a.date || ''); });
+            sorted.forEach(function(w) {
+                var card = document.createElement('article');
+                card.className = 'week-card';
+                card.innerHTML =
+                    '<div class="week-card-head">' +
+                        '<div>' +
+                            '<p class="eyebrow">Week · ' + escapeHtml(w.label || '') + '</p>' +
+                            '<h3>' + escapeHtml(w.date || '未填日期') + '</h3>' +
+                            '<p class="week-note">' + escapeHtml(w.note || '点编辑添加备注') + '</p>' +
+                        '</div>' +
+                        '<div class="week-actions">' +
+                            '<button type="button" class="ghost-btn" data-edit="'+w.id+'">编辑</button>' +
+                            '<button type="button" class="ghost-btn danger" data-del="'+w.id+'">删除</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="week-photo-row">' +
+                        photoSlotHtml(w.id, 'front', '正面 Front', w.photos.front) +
+                        photoSlotHtml(w.id, 'side',  '侧面 Side',  w.photos.side) +
+                        photoSlotHtml(w.id, 'back',  '背面 Back',  w.photos.back) +
+                    '</div>';
+                weeksList.appendChild(card);
+            });
+        }
+
+        function photoSlotHtml(id, slot, label, src) {
+            if (src) {
+                return '<div class="photo-slot filled" data-week="'+id+'" data-slot="'+slot+'">' +
+                    '<img src="'+src+'" alt="'+label+'">' +
+                    '<span class="photo-slot-label">'+label+'</span>' +
+                    '<button type="button" class="photo-slot-replace" data-replace="'+id+'" data-slot-replace="'+slot+'">更换</button>' +
+                '</div>';
+            }
+            return '<button type="button" class="photo-slot empty" data-upload="'+id+'" data-slot-up="'+slot+'">' +
+                '<span class="slot-plus">＋</span>' +
+                '<span class="photo-slot-label">'+label+'</span>' +
+            '</button>';
+        }
+
+        document.getElementById('addWeek').addEventListener('click', function() {
+            var label = prompt('给这一周一个标签（例如 Week 19）', 'Week ' + getISOWeek(new Date()));
+            if (label === null) return;
+            var date = prompt('日期（例如 2026-05-10）', new Date().toISOString().slice(0,10));
+            if (date === null) return;
+            store.weeks.push({
+                id: 'w' + Date.now(),
+                label: label,
+                date: date,
+                note: '',
+                photos: { front: null, side: null, back: null }
+            });
+            saveStore();
+            renderWeeks();
+        });
+
+        function getISOWeek(d) {
+            var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
+            var ys = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+            return Math.ceil((((t - ys) / 86400000) + 1) / 7);
+        }
+
+        weeksList.addEventListener('click', function(e) {
+            var del = e.target.closest('[data-del]');
+            if (del) {
+                var id = del.getAttribute('data-del');
+                if (confirm('确定删除这一周的记录吗？')) {
+                    store.weeks = store.weeks.filter(function(w){ return w.id !== id; });
+                    saveStore();
+                    renderWeeks();
+                }
+                return;
+            }
+            var edit = e.target.closest('[data-edit]');
+            if (edit) {
+                var id = edit.getAttribute('data-edit');
+                var w = store.weeks.find(function(x){ return x.id === id; });
+                if (!w) return;
+                var label = prompt('标签', w.label || '');
+                if (label === null) return;
+                var date = prompt('日期', w.date || '');
+                if (date === null) return;
+                var note = prompt('备注（这周和上周的对比感受）', w.note || '');
+                if (note === null) return;
+                w.label = label; w.date = date; w.note = note;
+                saveStore();
+                renderWeeks();
+                return;
+            }
+            var up = e.target.closest('[data-upload]');
+            if (up) {
+                pickPhoto(function(dataUrl) {
+                    var w = store.weeks.find(function(x){ return x.id === up.getAttribute('data-upload'); });
+                    if (!w) return;
+                    w.photos[up.getAttribute('data-slot-up')] = dataUrl;
+                    saveStore();
+                    renderWeeks();
+                });
+                return;
+            }
+            var rep = e.target.closest('[data-replace]');
+            if (rep) {
+                e.stopPropagation();
+                pickPhoto(function(dataUrl) {
+                    var w = store.weeks.find(function(x){ return x.id === rep.getAttribute('data-replace'); });
+                    if (!w) return;
+                    w.photos[rep.getAttribute('data-slot-replace')] = dataUrl;
+                    saveStore();
+                    renderWeeks();
+                });
+                return;
+            }
+            var img = e.target.closest('.photo-slot.filled img');
+            if (img) {
+                openLightbox(img.src);
+            }
+        });
+
+        function pickPhoto(cb) {
+            var inp = document.createElement('input');
+            inp.type = 'file'; inp.accept = 'image/*';
+            inp.addEventListener('change', function() {
+                var f = inp.files && inp.files[0];
+                if (!f) return;
+                var r = new FileReader();
+                r.onload = function() { cb(r.result); };
+                r.readAsDataURL(f);
+            });
+            inp.click();
+        }
+
+        // ---------- Baseline ----------
+        var baselineCover = document.getElementById('baselineCover');
+        var baselineReveal = document.getElementById('baselineReveal');
+        var baselineCard = document.getElementById('baselineCard');
+
+        baselineCover.addEventListener('click', function() {
+            baselineCover.style.display = 'none';
+            baselineReveal.hidden = false;
+            baselineCard.classList.add('revealed');
+            renderBaseline();
+        });
+        document.getElementById('baselineHide').addEventListener('click', function() {
+            baselineCover.style.display = '';
+            baselineReveal.hidden = true;
+            baselineCard.classList.remove('revealed');
+        });
+
+        function renderBaseline() {
+            ['front','side','back'].forEach(function(slot) {
+                var cell = document.querySelector('.baseline-slot[data-slot="'+slot+'"] .baseline-img');
+                var src = store.baseline[slot];
+                if (src) {
+                    cell.innerHTML = '<img src="'+src+'" alt="'+slot+'">';
+                    cell.dataset.empty = 'false';
+                } else {
+                    cell.innerHTML = '<span class="slot-plus">＋</span>';
+                    cell.dataset.empty = 'true';
+                }
+            });
+            document.getElementById('baselineDate').value = store.baseline.date || '';
+        }
+
+        document.querySelectorAll('.baseline-slot').forEach(function(slot) {
+            var key = slot.dataset.slot;
+            var btn = slot.querySelector('.baseline-upload');
+            var img = slot.querySelector('.baseline-img');
+            btn.addEventListener('click', function() {
+                pickPhoto(function(dataUrl) {
+                    store.baseline[key] = dataUrl;
+                    saveStore();
+                    renderBaseline();
+                });
+            });
+            img.addEventListener('click', function() {
+                if (img.dataset.empty === 'false') {
+                    var i = img.querySelector('img');
+                    if (i) openLightbox(i.src);
+                }
+            });
+        });
+
+        document.getElementById('baselineDate').addEventListener('change', function() {
+            store.baseline.date = this.value;
+            saveStore();
+        });
+
+        // ---------- Lightbox ----------
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImg = document.getElementById('lightboxImg');
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.hidden = false;
+        }
+        function closeLightbox() { lightbox.hidden = true; lightboxImg.src = ''; }
+        lightbox.addEventListener('click', function(e) {
+            if (e.target.matches('[data-close]')) closeLightbox();
+        });
+
+        // ---------- Sidebar nav (smooth scroll + active state) ----------
+        var navBtns = document.querySelectorAll('#yearFilter button[data-section]');
+        navBtns.forEach(function(b) {
+            b.addEventListener('click', function() {
+                navBtns.forEach(function(x){ x.classList.remove('active'); });
+                b.classList.add('active');
+                var id = b.dataset.section;
+                var el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // ---------- Init ----------
+        renderCalendar();
+        renderWeeks();
+    </script>
+</body>
 </html>
