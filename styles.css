@@ -323,13 +323,33 @@ section:last-of-type { margin-bottom: 0; }
     margin-bottom: 1.5rem;
 }
 .stat-card {
+    position: relative;
     border: 1px solid var(--hairline);
     border-radius: 14px;
     padding: 1.1rem 1.15rem 1rem;
     background: var(--bg);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
+}
+/* Tiny "本月" / "累计" tag in the corner */
+.stat-card-tag {
+    position: absolute;
+    top: 0.85rem; right: 0.95rem;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    line-height: 1.4;
+}
+.stat-card.alltime .stat-card-tag {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
 }
 .stat-card-label {
     font-size: 0.78rem;
@@ -511,9 +531,11 @@ section:last-of-type { margin-bottom: 0; }
 }
 .compare-photos {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
 }
+.compare-photos .photo-slot { aspect-ratio: 3 / 4; }
+.compare-photos .photo-slot-label { font-size: 0.62rem; left: 5px; bottom: 5px; padding: 0.1rem 0.4rem; }
 .compare-empty {
     grid-column: 1 / -1;
     border: 1px dashed var(--hairline);

@@ -126,25 +126,29 @@
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-card big">
-                        <span class="stat-card-label">本月训练天数</span>
+                    <div class="stat-card big monthly">
+                        <span class="stat-card-tag">本月</span>
+                        <span class="stat-card-label">训练天数</span>
                         <strong id="bigStatMonth">0</strong>
                         <small id="bigStatMonthOf">/ 0 天</small>
                     </div>
-                    <div class="stat-card big">
+                    <div class="stat-card big monthly">
+                        <span class="stat-card-tag">本月</span>
+                        <span class="stat-card-label">运动项次数</span>
+                        <strong id="bigStatItems">0</strong>
+                        <small>次</small>
+                    </div>
+                    <div class="stat-card big alltime">
+                        <span class="stat-card-tag">累计</span>
                         <span class="stat-card-label">连续训练</span>
                         <strong id="bigStatStreak">0</strong>
                         <small>天</small>
                     </div>
-                    <div class="stat-card big">
-                        <span class="stat-card-label">累计训练</span>
+                    <div class="stat-card big alltime">
+                        <span class="stat-card-tag">累计</span>
+                        <span class="stat-card-label">总训练天数</span>
                         <strong id="bigStatTotal">0</strong>
-                        <small>天</small>
-                    </div>
-                    <div class="stat-card big">
-                        <span class="stat-card-label">本月运动项次数</span>
-                        <strong id="bigStatItems">0</strong>
-                        <small>次</small>
+                        <small id="bigStatTotalSince">天</small>
                     </div>
                 </div>
 
@@ -753,11 +757,15 @@
                 }
             });
 
-            // Total days
+            // Total all-time training days + earliest training date
             var total = 0;
-            Object.keys(store.days).forEach(function(k) {
+            var firstKey = null;
+            Object.keys(store.days).sort().forEach(function(k) {
                 var e = store.days[k];
-                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) total++;
+                if (e && e.exercises && e.exercises.length && e.exercises.indexOf('休息') < 0) {
+                    total++;
+                    if (firstKey === null) firstKey = k;
+                }
             });
 
             // Streak (back from today)
@@ -776,6 +784,17 @@
             bigStatStreak.textContent = streak;
             bigStatTotal.textContent = total;
             bigStatItems.textContent = monthItems;
+
+            // Total card sub-text: "since first training day"
+            var sinceEl = document.getElementById('bigStatTotalSince');
+            if (sinceEl) {
+                if (firstKey) {
+                    var p = firstKey.split('-');
+                    sinceEl.textContent = '天 · 自 ' + p[0] + '.' + (+p[1]) + '.' + (+p[2]) + ' 起';
+                } else {
+                    sinceEl.textContent = '天 · 还没开始';
+                }
+            }
 
             // Top exercises (this month)
             topListMeta.textContent = MONTH_EN[view.m] + ' ' + view.y;
