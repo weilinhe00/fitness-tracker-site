@@ -3,190 +3,391 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小何的个人训练记录</title>
+    <title>小何的每日健身计划</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="小何的个人训练记录首页">
-          <span class="brand-mark" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
+        <a class="brand" href="#top">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
           <span>
-            <strong>小何的个人训练记录</strong>
-            <small>Personal Training Log</small>
+            <strong>小何的每日健身计划</strong>
+            <small>Daily Routine · v1</small>
           </span>
         </a>
-
         <div class="top-actions">
-          <button class="ghost-button" id="exportBtn" type="button">导出记录</button>
-          <label class="ghost-button import-button" for="importInput">导入记录</label>
-          <input id="importInput" type="file" accept="application/json" hidden>
+          <button class="ghost-button" type="button">编辑计划</button>
+          <button class="ghost-button" type="button">导出</button>
         </div>
       </header>
 
       <main id="top">
-        <section class="hero-panel" aria-labelledby="entryTitle">
-          <div class="hero-copy">
-            <p class="eyebrow">Xiao He</p>
-            <h1 id="entryTitle">小何的个人训练记录</h1>
-            <blockquote class="training-quote">“所有摧毁身体的快乐都无法超过塑造身体带来的快乐。”</blockquote>
-            <p class="hero-line" id="heroLine">5 个固定动作，跑步和骑单车按当天状态加入。</p>
-            <div class="hero-stats" id="heroStats"></div>
+        <section class="hero-panel-v2">
+          <div class="hero-meta">
+            <time>5 月 10 日 · 周日</time>
+            <span class="dot">·</span>
+            <span>第 19 周 · 第 3 天</span>
           </div>
 
-          <form id="workoutForm" class="entry-form">
-            <input type="hidden" id="recordId">
+          <h1>所有摧毁身体的快乐<br>都无法超过塑造身体的快乐。</h1>
 
-            <div class="form-grid">
-              <label class="field">
-                <span>日期</span>
-                <input id="dateInput" type="date" required>
-              </label>
-
-              <label class="field">
-                <span>时长（分钟）</span>
-                <input id="durationInput" type="number" min="1" max="1440" step="1" placeholder="45" required>
-              </label>
-
-              <label class="field">
-                <span>强度</span>
-                <select id="intensityInput">
-                  <option value="轻松">轻松</option>
-                  <option value="中等" selected>中等</option>
-                  <option value="高强度">高强度</option>
-                  <option value="恢复">恢复</option>
-                </select>
-              </label>
-
-              <fieldset class="field field-wide exercise-field">
-                <legend>今日训练</legend>
-                <div class="plan-board" id="planBoard"></div>
-              </fieldset>
-
-              <label class="field field-wide">
-                <span>补充项目</span>
-                <input id="customExerciseInput" type="text" placeholder="例如：划船机、椭圆机、拉伸">
-              </label>
-
-              <label class="field field-wide">
-                <span>训练备注</span>
-                <textarea id="notesInput" rows="4" placeholder="今天完成了什么、身体感觉如何"></textarea>
-              </label>
-
-              <label class="field field-wide">
-                <span>图片</span>
-                <div class="photo-drop" id="photoDrop">
-                  <input id="photoInput" type="file" accept="image/*">
-                  <div class="photo-preview" id="photoPreview">
-                    <span>选择或拖入图片</span>
-                  </div>
-                </div>
-              </label>
+          <div class="hero-strip">
+            <div class="strip-cell">
+              <span class="strip-label">Today</span>
+              <div class="strip-value">
+                <strong>3</strong><em>/ 5</em>
+              </div>
+              <div class="strip-bar"><span style="width:60%"></span></div>
             </div>
-
-            <div class="form-actions">
-              <button class="primary-button" id="submitBtn" type="submit">保存记录</button>
-              <button class="ghost-button" id="resetBtn" type="button">清空</button>
+            <div class="strip-cell">
+              <span class="strip-label">Streak</span>
+              <div class="strip-value">
+                <strong>23</strong><em>天</em>
+              </div>
+              <span class="strip-sub">本月连续</span>
             </div>
-          </form>
+            <div class="strip-cell">
+              <span class="strip-label">This Week</span>
+              <div class="strip-value">
+                <strong>14</strong><em>/ 25</em>
+              </div>
+              <span class="strip-sub">第 19 周完成项</span>
+            </div>
+            <div class="strip-cell">
+              <span class="strip-label">Photo</span>
+              <div class="strip-value strip-warn">
+                <strong>0</strong><em>/ 3 张</em>
+              </div>
+              <span class="strip-sub">本周还没记录</span>
+            </div>
+          </div>
         </section>
 
-        <section class="dashboard" aria-labelledby="dashboardTitle">
+        <section class="checkin-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Today · 5 / 10</p>
+              <h2>今日训练</h2>
+            </div>
+            <span class="completion-msg">已完成 <strong>3</strong> 项 · 还差 2 项</span>
+          </div>
+
+          <div class="checkin-grid">
+            <button class="checkin-card is-done" type="button">
+              <span class="checkin-num">01</span>
+              <span class="checkin-status"><span>✓</span></span>
+              <h3>波比跳</h3>
+              <div class="checkin-targets">
+                <div><strong>30</strong> × 3 组</div>
+                <div class="checkin-limit">极限 40</div>
+              </div>
+            </button>
+
+            <button class="checkin-card is-done" type="button">
+              <span class="checkin-num">02</span>
+              <span class="checkin-status"><span>✓</span></span>
+              <h3>箭步蹲</h3>
+              <div class="checkin-targets">
+                <div><strong>30</strong> × 3 组</div>
+                <div class="checkin-limit">极限 50</div>
+              </div>
+            </button>
+
+            <button class="checkin-card is-done" type="button">
+              <span class="checkin-num">03</span>
+              <span class="checkin-status"><span>✓</span></span>
+              <h3>4公斤哑铃提拉</h3>
+              <div class="checkin-targets">
+                <div><strong>40</strong> × 3 组</div>
+                <div class="checkin-limit">极限 60</div>
+              </div>
+            </button>
+
+            <button class="checkin-card" type="button">
+              <span class="checkin-num">04</span>
+              <span class="checkin-status"><span>+</span></span>
+              <h3>卷腹</h3>
+              <div class="checkin-targets">
+                <div><strong>30</strong> × 3 组</div>
+                <div class="checkin-limit">极限 40</div>
+              </div>
+            </button>
+
+            <button class="checkin-card" type="button">
+              <span class="checkin-num">05</span>
+              <span class="checkin-status"><span>+</span></span>
+              <h3>龙门架</h3>
+              <div class="checkin-targets">
+                <div class="checkin-limit big">极限 30</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="optional-row">
+            <span class="opt-label">额外加入</span>
+            <button class="opt-card" type="button">
+              <span class="opt-icon">+</span>
+              <span>跑步</span>
+            </button>
+            <button class="opt-card" type="button">
+              <span class="opt-icon">+</span>
+              <span>骑单车</span>
+            </button>
+          </div>
+
+          <div class="checkin-actions">
+            <button class="ghost-button" type="button">明天再说</button>
+            <button class="primary-button" type="button">保存今日打卡</button>
+          </div>
+        </section>
+
+        <section class="weekly-section">
+          <div class="weekly-card">
+            <div class="weekly-info">
+              <p class="eyebrow">Weekly Snapshot · Week 19</p>
+              <h3>第 19 周 效果记录</h3>
+              <p class="weekly-status">本周还没传效果照 · 与第 18 周对比观察变化</p>
+            </div>
+            <div class="photo-slots">
+              <button class="photo-slot empty" type="button">
+                <span class="slot-icon">＋</span>
+                <span class="slot-label">正面</span>
+              </button>
+              <button class="photo-slot empty" type="button">
+                <span class="slot-icon">＋</span>
+                <span class="slot-label">侧面</span>
+              </button>
+              <button class="photo-slot empty" type="button">
+                <span class="slot-icon">＋</span>
+                <span class="slot-label">背面</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="dashboard">
           <div class="section-heading">
             <div>
               <p class="eyebrow">Dashboard</p>
-              <h2 id="dashboardTitle">训练可视化</h2>
+              <h2>训练可视化</h2>
             </div>
-
             <label class="month-filter">
               <span>月份</span>
-              <input id="monthInput" type="month">
+              <input type="month" value="2026-05">
             </label>
           </div>
 
-          <div class="metric-grid" id="metricGrid"></div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <span>本月训练天数</span>
+              <strong>23 天</strong>
+              <small>out of 31 days</small>
+            </div>
+            <div class="metric-card">
+              <span>本月项目完成</span>
+              <strong>147 次</strong>
+              <small>across 5 categories</small>
+            </div>
+            <div class="metric-card">
+              <span>极限挑战次数</span>
+              <strong>9 次</strong>
+              <small>this month</small>
+            </div>
+            <div class="metric-card">
+              <span>平均完成率</span>
+              <strong>73%</strong>
+              <small>per active day</small>
+            </div>
+          </div>
 
           <div class="visual-grid">
             <article class="visual-panel">
               <div class="panel-heading">
-                <h3>近 14 天</h3>
-                <span id="chartTotal">0 分钟</span>
+                <h3>近 14 天每日完成</h3>
+                <span>项 / 5</span>
               </div>
-              <div class="bar-chart" id="barChart" aria-label="近 14 天运动时长图"></div>
+              <div class="bar-chart">
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:40%"></div></div><div class="bar-label">28</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:0%"></div></div><div class="bar-label">29</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:60%"></div></div><div class="bar-label">30</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">1</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:50%"></div></div><div class="bar-label">2</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:0%"></div></div><div class="bar-label">3</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:100%"></div></div><div class="bar-label">4</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:60%"></div></div><div class="bar-label">5</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">6</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:40%"></div></div><div class="bar-label">7</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">8</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:0%"></div></div><div class="bar-label">9</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:80%"></div></div><div class="bar-label">10</div></div>
+                <div class="bar-item"><div class="bar-track"><div class="bar-fill" style="height:60%"></div></div><div class="bar-label">11</div></div>
+              </div>
             </article>
 
             <article class="visual-panel">
               <div class="panel-heading">
-                <h3>本月热力</h3>
-                <span id="monthActive">0 天</span>
+                <h3>本月坚持热力</h3>
+                <span>23 天</span>
               </div>
-              <div class="heatmap" id="heatmap" aria-label="本月运动热力图"></div>
-            </article>
-
-            <article class="visual-panel">
-              <div class="panel-heading">
-                <h3>项目分布</h3>
-                <span id="typeTotal">0 项</span>
-              </div>
-              <div class="distribution">
-                <div class="donut" id="donutChart" aria-label="项目分布图"></div>
-                <div class="legend" id="legend"></div>
+              <div class="heatmap">
+                <div class="heat-label">M</div><div class="heat-label">T</div><div class="heat-label">W</div><div class="heat-label">T</div><div class="heat-label">F</div><div class="heat-label">S</div><div class="heat-label">S</div>
+                <div class="heat-cell level-2">1</div><div class="heat-cell level-1">2</div><div class="heat-cell level-3">3</div><div class="heat-cell">4</div><div class="heat-cell level-2">5</div><div class="heat-cell level-3">6</div><div class="heat-cell level-1">7</div>
+                <div class="heat-cell level-3">8</div><div class="heat-cell">9</div><div class="heat-cell level-2">10</div><div class="heat-cell level-1">11</div><div class="heat-cell level-3">12</div><div class="heat-cell level-3">13</div><div class="heat-cell level-2">14</div>
+                <div class="heat-cell level-1">15</div><div class="heat-cell level-2">16</div><div class="heat-cell">17</div><div class="heat-cell level-3">18</div><div class="heat-cell level-2">19</div><div class="heat-cell level-1">20</div><div class="heat-cell level-3">21</div>
+                <div class="heat-cell level-2">22</div><div class="heat-cell level-3">23</div><div class="heat-cell level-1">24</div><div class="heat-cell level-2">25</div><div class="heat-cell">26</div><div class="heat-cell level-3">27</div><div class="heat-cell level-2">28</div>
+                <div class="heat-cell level-1">29</div><div class="heat-cell level-3">30</div><div class="heat-cell is-today level-2">31</div>
               </div>
             </article>
 
             <article class="visual-panel progress-panel">
               <div class="panel-heading">
-                <h3>计划完成度</h3>
-                <span id="targetSummary">0%</span>
+                <h3>各项目本月完成度</h3>
+                <span>5 项</span>
               </div>
-              <div class="target-progress-list" id="targetProgress"></div>
+              <div class="target-progress-list">
+                <div class="target-row">
+                  <div><strong>波比跳</strong><span>20 / 30 天</span></div>
+                  <div class="target-track"><span style="width:67%"></span></div>
+                </div>
+                <div class="target-row">
+                  <div><strong>箭步蹲</strong><span>18 / 30 天</span></div>
+                  <div class="target-track"><span style="width:60%"></span></div>
+                </div>
+                <div class="target-row">
+                  <div><strong>哑铃提拉</strong><span>15 / 30 天</span></div>
+                  <div class="target-track"><span style="width:50%"></span></div>
+                </div>
+                <div class="target-row">
+                  <div><strong>卷腹</strong><span>23 / 30 天</span></div>
+                  <div class="target-track"><span style="width:77%"></span></div>
+                </div>
+                <div class="target-row">
+                  <div><strong>龙门架</strong><span>12 / 30 天</span></div>
+                  <div class="target-track"><span style="width:40%"></span></div>
+                </div>
+              </div>
             </article>
           </div>
         </section>
 
-        <section class="timeline-section" aria-labelledby="timelineTitle">
+        <section class="history-section">
           <div class="section-heading">
             <div>
               <p class="eyebrow">History</p>
-              <h2 id="timelineTitle">训练记录</h2>
+              <h2>训练记录</h2>
             </div>
             <label class="search-box">
               <span>搜索</span>
-              <input id="searchInput" type="search" placeholder="项目、备注、日期">
+              <input type="search" placeholder="项目、日期">
             </label>
           </div>
 
-          <div class="record-list" id="recordList"></div>
+          <article class="week-block">
+            <div class="week-header">
+              <div class="week-info">
+                <p class="eyebrow">Week 19 · Current</p>
+                <h3>5 月 4 日 — 5 月 10 日</h3>
+                <p class="week-stats">完成 <strong>14</strong> / 25 项 · <strong>5</strong> 天有训练</p>
+              </div>
+              <div class="week-photos">
+                <div class="mini-photo placeholder"><span>正面</span></div>
+                <div class="mini-photo placeholder"><span>侧面</span></div>
+                <div class="mini-photo placeholder"><span>背面</span></div>
+              </div>
+            </div>
+            <div class="day-list">
+              <div class="day-row">
+                <time><strong>10</strong><span>周日</span></time>
+                <div class="day-tags">
+                  <span class="tag-done">波比跳</span>
+                  <span class="tag-done">箭步蹲</span>
+                  <span class="tag-done">哑铃提拉</span>
+                </div>
+                <span class="day-score">3 / 5</span>
+              </div>
+              <div class="day-row">
+                <time><strong>09</strong><span>周六</span></time>
+                <div class="day-tags">
+                  <span class="tag-rest">休息</span>
+                </div>
+                <span class="day-score">—</span>
+              </div>
+              <div class="day-row">
+                <time><strong>08</strong><span>周五</span></time>
+                <div class="day-tags">
+                  <span class="tag-done">波比跳</span>
+                  <span class="tag-done">卷腹</span>
+                  <span class="tag-done">龙门架</span>
+                  <span class="tag-done">跑步 5km</span>
+                </div>
+                <span class="day-score">4 / 5</span>
+              </div>
+              <div class="day-row">
+                <time><strong>07</strong><span>周四</span></time>
+                <div class="day-tags">
+                  <span class="tag-done">箭步蹲</span>
+                  <span class="tag-done">哑铃提拉</span>
+                  <span class="tag-done">卷腹</span>
+                </div>
+                <span class="day-score">3 / 5</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="week-block">
+            <div class="week-header">
+              <div class="week-info">
+                <p class="eyebrow">Week 18</p>
+                <h3>4 月 27 日 — 5 月 3 日</h3>
+                <p class="week-stats">完成 <strong>22</strong> / 25 项 · <strong>6</strong> 天有训练</p>
+              </div>
+              <div class="week-photos">
+                <div class="mini-photo filled"><span>正面</span></div>
+                <div class="mini-photo filled"><span>侧面</span></div>
+                <div class="mini-photo filled"><span>背面</span></div>
+              </div>
+            </div>
+            <div class="day-list">
+              <div class="day-row">
+                <time><strong>03</strong><span>周日</span></time>
+                <div class="day-tags">
+                  <span class="tag-done">波比跳</span>
+                  <span class="tag-done">箭步蹲</span>
+                  <span class="tag-done">哑铃提拉</span>
+                  <span class="tag-done">卷腹</span>
+                  <span class="tag-done">龙门架</span>
+                </div>
+                <span class="day-score perfect">5 / 5</span>
+              </div>
+              <div class="day-row">
+                <time><strong>02</strong><span>周六</span></time>
+                <div class="day-tags">
+                  <span class="tag-done">波比跳</span>
+                  <span class="tag-done">卷腹</span>
+                  <span class="tag-done">骑单车 12km</span>
+                </div>
+                <span class="day-score">3 / 5</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="week-block baseline-block">
+            <div class="week-header">
+              <div class="week-info">
+                <p class="eyebrow">Initial · 起始记录</p>
+                <h3>起始效果图</h3>
+                <p class="week-stats">4 月 27 日 上传 · 用作所有后续对比的基准</p>
+              </div>
+              <div class="week-photos">
+                <div class="mini-photo filled baseline"><span>正面</span></div>
+                <div class="mini-photo filled baseline"><span>侧面</span></div>
+                <div class="mini-photo filled baseline"><span>背面</span></div>
+              </div>
+            </div>
+          </article>
         </section>
       </main>
     </div>
-
-    <template id="recordTemplate">
-      <article class="record-card">
-        <div class="record-media"></div>
-        <div class="record-body">
-          <div class="record-topline">
-            <div>
-              <time></time>
-              <h3></h3>
-            </div>
-            <span class="duration-pill"></span>
-          </div>
-          <div class="tag-row"></div>
-          <div class="record-details"></div>
-          <p class="record-notes"></p>
-          <div class="record-actions">
-            <button class="small-button edit-record" type="button">编辑</button>
-            <button class="small-button delete-record" type="button">删除</button>
-          </div>
-        </div>
-      </article>
-    </template>
-
-    <script src="app.js"></script>
   </body>
 </html>
