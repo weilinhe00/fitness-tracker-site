@@ -569,20 +569,6 @@ h2 {
     line-height: 1.65;
 }
 
-/* Section quote — single italic line under section heading */
-.section-quote {
-    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
-    font-style: normal;
-    font-size: 0.95rem;
-    font-weight: 400;
-    line-height: 1.65;
-    letter-spacing: 0.01em;
-    color: var(--text-secondary);
-    margin: 0 0 1.75rem;
-    padding: 0.05rem 0 0.05rem 0.9rem;
-    border-left: 2px solid var(--text-tertiary);
-    quotes: none;
-}
 
 .cal-head {
     display: flex;
@@ -1344,7 +1330,6 @@ footer {
     .modal-card { max-height: 95vh; }
     .modal-head, .modal-body, .modal-foot { padding-left: 1.1rem; padding-right: 1.1rem; }
 
-    .section-quote { font-size: 0.98rem; padding-left: 0.75rem; }
 }
 
 /* Phone — really narrow */
@@ -1410,11 +1395,6 @@ footer {
         justify-content: center;
     }
 
-    .section-quote {
-        font-size: 0.95rem;
-        line-height: 1.55;
-        padding: 0.1rem 0 0.1rem 0.7rem;
-    }
 
     section { margin-bottom: 2rem; }
     h2 { font-size: 1.05rem; }
