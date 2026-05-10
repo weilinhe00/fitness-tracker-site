@@ -58,11 +58,6 @@
                 <button type="button" data-section="compare">效果对比</button>
             </div>
 
-            <div class="sync-status" id="syncStatus">
-                <button type="button" class="data-btn" id="authBtn">登录同步</button>
-                <span class="sync-state" id="syncState">只读模式</span>
-            </div>
-
         </aside>
 
         <main class="content">
@@ -203,8 +198,8 @@
             <section class="backup-section" id="backup">
                 <div class="cal-head">
                     <div>
-                        <h2>数据备份</h2>
-                        <p class="subtitle">日历记录保存在本浏览器，可导出 JSON 备份或换设备时导入恢复。</p>
+                        <h2>数据备份与同步</h2>
+                        <p class="subtitle">这里管理打卡数据的备份和云端同步。<strong>导出备份</strong>把当前记录存成 JSON 文件；<strong>导入备份</strong>用文件恢复到当前浏览器。<strong>管理员登录</strong>后，新增的打卡会同步到云端，所有访问网页的人都能实时看到。</p>
                     </div>
                 </div>
                 <div class="data-actions">
@@ -216,7 +211,12 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                         <span>导入备份</span>
                     </button>
+                    <button type="button" class="data-btn" id="authBtn" title="Google 登录后即可写入云端">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <span>管理员登录</span>
+                    </button>
                 </div>
+                <p class="sync-state-line"><span id="syncState"></span></p>
                 <input type="file" id="importFile" accept="application/json,.json" hidden>
             </section>
 
@@ -414,23 +414,24 @@
 
         // ---------- Auth UI ----------
         var authBtn = document.getElementById('authBtn');
+        var authBtnLabel = authBtn.querySelector('span');
         var syncStateEl = document.getElementById('syncState');
 
         function updateAuthUI() {
             if (currentUser) {
-                authBtn.textContent = '登出';
+                authBtnLabel.textContent = '登出';
                 if (isOwner()) {
-                    syncStateEl.textContent = '管理员 · ' + (currentUser.displayName || currentUser.email || '已登录');
+                    syncStateEl.textContent = '已登录 · ' + (currentUser.displayName || currentUser.email || '管理员') + ' · 写入会同步到云端';
                     syncStateEl.classList.add('is-owner');
                     syncStateEl.classList.remove('is-readonly');
                 } else {
-                    syncStateEl.textContent = '只读 · 非管理员账号';
+                    syncStateEl.textContent = '当前账号不是管理员 — 写入仅保存到本地';
                     syncStateEl.classList.remove('is-owner');
                     syncStateEl.classList.add('is-readonly');
                 }
             } else {
-                authBtn.textContent = '管理员登录';
-                syncStateEl.textContent = firestoreLoaded ? '只读模式 · 实时同步' : '只读模式';
+                authBtnLabel.textContent = '管理员登录';
+                syncStateEl.textContent = '';
                 syncStateEl.classList.remove('is-owner', 'is-readonly');
             }
         }
