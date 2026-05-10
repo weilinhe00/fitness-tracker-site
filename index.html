@@ -636,8 +636,8 @@
             compareCard.classList.remove('revealed');
         });
 
-        // Photo position labels by filename order: 1=front, 2=side, 3=back, 4=arms
-        var POSITION_LABELS = ['正面', '侧面', '背面', '手臂'];
+        // Photo position labels by filename order: 1=正面 2=侧面 3=背面 4=手臂 5=背部
+        var POSITION_LABELS = ['正面', '侧面', '背面', '手臂', '背部'];
         function labelFor(src, idx) {
             // Try to read the filename and map 1.jpg → 正面 etc.
             var m = String(src).match(/\/(\d+)\.[a-zA-Z]+$/);
