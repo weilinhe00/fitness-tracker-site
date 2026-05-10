@@ -638,6 +638,19 @@
             compareCard.classList.remove('revealed');
         });
 
+        // Photo position labels by filename order: 1=front, 2=side, 3=back, 4=arms
+        var POSITION_LABELS = ['正面', '侧面', '背面', '手臂'];
+        function labelFor(src, idx) {
+            // Try to read the filename and map 1.jpg → 正面 etc.
+            var m = String(src).match(/\/(\d+)\.[a-zA-Z]+$/);
+            if (m) {
+                var n = parseInt(m[1], 10);
+                if (n >= 1 && n <= POSITION_LABELS.length) return POSITION_LABELS[n - 1];
+            }
+            // Fallback: by index
+            return POSITION_LABELS[idx] || ('图 ' + (idx + 1));
+        }
+
         function buildPhotoGrid(container, photos, labelPrefix) {
             container.innerHTML = '';
             if (!photos || !photos.length) {
@@ -645,11 +658,14 @@
                 return;
             }
             photos.forEach(function(src, i) {
+                var label = labelFor(src, i);
                 var btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'photo-slot filled';
                 btn.setAttribute('data-src', src);
-                btn.innerHTML = '<img src="' + escapeHtml(src) + '" alt="' + labelPrefix + ' ' + (i+1) + '" loading="lazy">';
+                btn.innerHTML =
+                    '<img src="' + escapeHtml(src) + '" alt="' + labelPrefix + ' · ' + label + '" loading="lazy">' +
+                    '<span class="photo-slot-label">' + label + '</span>';
                 btn.addEventListener('click', function() { openLightbox(src); });
                 container.appendChild(btn);
             });
