@@ -528,13 +528,9 @@
                 var html = '<div class="cal-day">' + day + '</div>';
                 if (entry && entry.exercises && entry.exercises.length) {
                     html += '<div class="cal-tags">';
-                    var shown = entry.exercises.slice(0, 3);
-                    shown.forEach(function(t) {
+                    entry.exercises.forEach(function(t) {
                         html += '<span class="cal-tag">' + escapeHtml(t) + '</span>';
                     });
-                    if (entry.exercises.length > 3) {
-                        html += '<span class="cal-tag more">+' + (entry.exercises.length - 3) + '</span>';
-                    }
                     html += '</div>';
                 } else {
                     html += '<div class="cal-empty">—</div>';
