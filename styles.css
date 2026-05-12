@@ -761,11 +761,11 @@ h2 {
     border-radius: 4px;
     line-height: 1.35;
     max-width: 100%;
-    /* Allow wrapping so long names stay readable */
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    /* One tag per line; truncate long names with ellipsis */
     display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .cal-cell.has-entry .cal-tag {
     background: rgba(29, 29, 31, 0.08);
