@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260512a">
+    <link rel="stylesheet" href="styles.css?v=20260512b">
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
@@ -275,6 +275,15 @@
                     </div>
                 </div>
 
+                <label class="field-label" style="margin-top:1.5rem;">其他记录</label>
+                <div class="extra-toggles">
+                    <button type="button" class="toggle-chip" id="periodToggle">
+                        <span class="toggle-dot"></span>
+                        <span>月经</span>
+                    </button>
+                    <span class="field-hint">点击开关 — 不计入训练 / 休息</span>
+                </div>
+
                 <label class="field-label" style="margin-top:1.5rem;">备注（可选）</label>
                 <textarea id="dayNote" rows="3" placeholder="今日感受、强度、状态…"></textarea>
 
@@ -356,16 +365,17 @@
         function loadLocal() {
             try {
                 var raw = localStorage.getItem(STORE_KEY);
-                if (!raw) return { days: {} };
+                if (!raw) return { days: {}, exerciseColors: {} };
                 var data = JSON.parse(raw);
                 if (!data.days) data.days = {};
+                if (!data.exerciseColors) data.exerciseColors = {};
                 return data;
             } catch (e) {
-                return { days: {} };
+                return { days: {}, exerciseColors: {} };
             }
         }
         function writeLocal() {
-            try { localStorage.setItem(STORE_KEY, JSON.stringify({ days: store.days })); }
+            try { localStorage.setItem(STORE_KEY, JSON.stringify({ days: store.days, exerciseColors: store.exerciseColors || {} })); }
             catch (e) {}
         }
 
@@ -392,6 +402,7 @@
             // Owner: push to Firestore
             var payload = {
                 days: store.days,
+                exerciseColors: store.exerciseColors || {},
                 ownerUid: docOwnerUid || currentUser.uid,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -459,6 +470,7 @@
                 var data = snap.data();
                 if (data) {
                     if (data.ownerUid) docOwnerUid = data.ownerUid;
+                    if (data.exerciseColors) store.exerciseColors = data.exerciseColors;
                     if (data.days) {
                         store.days = data.days;
                         writeLocal();
@@ -523,16 +535,23 @@
                 if (key === todayKey) cell.classList.add('is-today');
                 if (entry && entry.exercises && entry.exercises.length) cell.classList.add('has-entry');
                 if (entry && entry.exercises && entry.exercises.indexOf('休息') >= 0) cell.classList.add('rest');
+                if (entry && entry.period) cell.classList.add('has-period');
                 cell.dataset.key = key;
 
-                var html = '<div class="cal-day">' + day + '</div>';
+                var dayHtml = '<div class="cal-day">' + day;
+                if (entry && entry.period) {
+                    dayHtml += '<span class="period-dot" title="月经"></span>';
+                }
+                dayHtml += '</div>';
+                var html = dayHtml;
                 if (entry && entry.exercises && entry.exercises.length) {
                     html += '<div class="cal-tags">';
                     entry.exercises.forEach(function(t) {
-                        html += '<span class="cal-tag">' + escapeHtml(t) + '</span>';
+                        var color = getColor(t);
+                        html += '<span class="cal-tag" data-color="' + color + '">' + escapeHtml(t) + '</span>';
                     });
                     html += '</div>';
-                } else {
+                } else if (!(entry && entry.period)) {
                     html += '<div class="cal-empty">—</div>';
                 }
                 cell.innerHTML = html;
@@ -581,14 +600,31 @@
         var exerciseTags = document.getElementById('exerciseTags');
         var dayNote = document.getElementById('dayNote');
         var dayMinutesInput = document.getElementById('dayMinutes');
+        var periodToggle = document.getElementById('periodToggle');
         var currentKey = null;
         var workingTags = [];
+        var workingPeriod = false;
+
+        // ---------- Exercise colors (per name) ----------
+        var COLOR_ORDER = ['default', 'blue', 'yellow'];
+        function getColor(name) {
+            return (store.exerciseColors && store.exerciseColors[name]) || 'default';
+        }
+        function cycleColor(name) {
+            if (!store.exerciseColors) store.exerciseColors = {};
+            var cur = getColor(name);
+            var i = COLOR_ORDER.indexOf(cur);
+            var next = COLOR_ORDER[(i + 1) % COLOR_ORDER.length];
+            if (next === 'default') delete store.exerciseColors[name];
+            else store.exerciseColors[name] = next;
+        }
 
         function openDay(key) {
             currentKey = key;
             var d = fromKey(key);
-            var entry = store.days[key] || { exercises: [], note: '', minutes: 0 };
+            var entry = store.days[key] || { exercises: [], note: '', minutes: 0, period: false };
             workingTags = entry.exercises.slice();
+            workingPeriod = !!entry.period;
             dayNote.value = entry.note || '';
             dayMinutesInput.value = entry.minutes ? String(entry.minutes) : '';
             dayTitle.textContent = (d.getMonth()+1) + ' 月 ' + d.getDate() + ' 日 · ' + WEEK_CN[d.getDay()];
@@ -596,11 +632,20 @@
             var isToday = d.toDateString() === today.toDateString();
             dayEyebrow.textContent = isToday ? '今日 · ' + key : key;
             renderTags();
+            renderPeriodToggle();
             exerciseInput.value = '';
             dayModal.hidden = false;
             setTimeout(function() { exerciseInput.focus(); }, 50);
         }
         function closeDay() { dayModal.hidden = true; currentKey = null; }
+
+        function renderPeriodToggle() {
+            periodToggle.classList.toggle('is-active', workingPeriod);
+        }
+        periodToggle.addEventListener('click', function() {
+            workingPeriod = !workingPeriod;
+            renderPeriodToggle();
+        });
 
         function renderTags() {
             exerciseTags.innerHTML = '';
@@ -609,18 +654,33 @@
                 return;
             }
             workingTags.forEach(function(t, i) {
+                var color = getColor(t);
                 var chip = document.createElement('span');
                 chip.className = 'ex-chip';
-                chip.innerHTML = escapeHtml(t) + '<button type="button" data-i="'+i+'" aria-label="remove">×</button>';
+                chip.setAttribute('data-color', color);
+                chip.innerHTML =
+                    '<button type="button" class="ex-color" data-color-i="'+i+'" title="点击切换颜色"></button>' +
+                    '<span class="ex-name">' + escapeHtml(t) + '</span>' +
+                    '<button type="button" class="ex-remove" data-i="'+i+'" aria-label="remove">×</button>';
                 exerciseTags.appendChild(chip);
             });
         }
 
         exerciseTags.addEventListener('click', function(e) {
-            var btn = e.target.closest('button[data-i]');
-            if (!btn) return;
-            workingTags.splice(+btn.dataset.i, 1);
-            renderTags();
+            var del = e.target.closest('button[data-i]');
+            if (del) {
+                workingTags.splice(+del.dataset.i, 1);
+                renderTags();
+                return;
+            }
+            var col = e.target.closest('button[data-color-i]');
+            if (col) {
+                var name = workingTags[+col.dataset.colorI];
+                if (name) {
+                    cycleColor(name);
+                    renderTags();
+                }
+            }
         });
 
         function addExerciseFromInput() {
@@ -651,13 +711,14 @@
             if (!currentKey) return;
             var mins = parseInt(dayMinutesInput.value, 10);
             if (isNaN(mins) || mins < 0) mins = 0;
-            if (!workingTags.length && !dayNote.value.trim() && !mins) {
+            if (!workingTags.length && !dayNote.value.trim() && !mins && !workingPeriod) {
                 delete store.days[currentKey];
             } else {
                 store.days[currentKey] = {
                     exercises: workingTags.slice(),
                     note: dayNote.value.trim(),
-                    minutes: mins
+                    minutes: mins,
+                    period: workingPeriod
                 };
             }
             saveStore();
@@ -668,8 +729,11 @@
         document.getElementById('clearDay').addEventListener('click', function() {
             if (!currentKey) return;
             workingTags = [];
+            workingPeriod = false;
+            dayMinutesInput.value = '';
             dayNote.value = '';
             renderTags();
+            renderPeriodToggle();
         });
 
         dayModal.addEventListener('click', function(e) {

@@ -772,6 +772,34 @@ h2 {
     color: var(--accent);
 }
 
+/* Per-exercise color variants (cycle: default / blue / yellow) */
+.cal-tag[data-color="blue"],
+.cal-cell.has-entry .cal-tag[data-color="blue"] {
+    background: #dbe7f7;
+    color: #1f3c6b;
+}
+.cal-tag[data-color="yellow"],
+.cal-cell.has-entry .cal-tag[data-color="yellow"] {
+    background: #faecc2;
+    color: #6b4f0f;
+}
+
+/* Period indicator dot on calendar day number */
+.period-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #b54470;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+    transform: translateY(-1px);
+}
+.cal-cell.is-today .cal-day .period-dot {
+    background: var(--bg);
+    margin-left: 0.2rem;
+    width: 5px; height: 5px;
+}
+
 .cal-empty {
     color: var(--text-tertiary);
     font-size: 0.75rem;
@@ -1165,10 +1193,30 @@ h2 {
     border: 1px solid transparent;
     color: var(--text);
     font-size: 0.85rem;
-    padding: 0.3rem 0.5rem 0.3rem 0.75rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.4rem;
     border-radius: 999px;
 }
-.ex-chip button {
+.ex-chip[data-color="blue"]   { background: #dbe7f7; color: #1f3c6b; }
+.ex-chip[data-color="yellow"] { background: #faecc2; color: #6b4f0f; }
+
+.ex-chip .ex-name { padding: 0 0.1rem; }
+
+.ex-chip .ex-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #c8c8cc;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    flex-shrink: 0;
+}
+.ex-chip[data-color="blue"]   .ex-color { background: #5a86c8; }
+.ex-chip[data-color="yellow"] .ex-color { background: #d6b34a; }
+.ex-chip .ex-color:hover { transform: scale(1.15); box-shadow: 0 0 0 2px rgba(0,0,0,0.06); }
+
+.ex-chip .ex-remove {
     background: transparent;
     border: none;
     color: var(--text-tertiary);
@@ -1179,7 +1227,46 @@ h2 {
     border-radius: 50%;
     transition: color 0.15s ease;
 }
-.ex-chip button:hover { color: var(--accent); }
+.ex-chip .ex-remove:hover { color: var(--text); }
+
+/* Period toggle in modal */
+.extra-toggles {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.toggle-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.7rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.toggle-chip:hover { color: var(--text); border-color: var(--text); }
+.toggle-chip .toggle-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    transition: background 0.15s ease;
+}
+.toggle-chip.is-active {
+    color: var(--bg);
+    background: #b54470;
+    border-color: #b54470;
+}
+.toggle-chip.is-active .toggle-dot {
+    background: var(--bg);
+    border-color: var(--bg);
+}
 
 textarea#dayNote {
     width: 100%;
